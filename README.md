@@ -16,11 +16,20 @@ A shared mapping file is correct for one release. The report reads the system it
 
 It only reads. It writes nothing to the database and opens no outbound connection.
 
+## Which system you need
+
+The report reads SAP's own successor list from the system (`ARS_W_API_SCCSSR` and `ARS_W_API_STATE`, contract C1). This is the same data the ATC check "Usage of APIs" reads with `releasedAPIDataSource = checkedSystem`, so the report and ATC give the same answer. SAP fills this list from **S/4HANA 2022** on.
+
+- **S/4HANA 2022 or later:** use the report. It answers for your release and your own extension fields.
+- **Older releases:** the list is empty, so the system has no reliable answer to read, and the report stops with a message. Use the [AI skill](#use-with-an-ai-assistant) instead. It ships with data from an S/4HANA 2025 FPS01 system, so a view or field it names may not exist in your release yet; check it in your system before you use it.
+
+The report does not carry a list of its own on purpose: a built-in list would hold SAP's latest successors, not the ones of your release, and would look more certain than it is.
+
 ## Install
 
 Two ways, same code:
 
-- **abapGit:** pull this repository into a local or Z package. It creates the report `ZCDS_FIELD_MAPPING` and the classes `ZCL_CDS_FIELD_MAPPING` and `ZCL_CDS_FIELD_MAPPING_PAIRS`.
+- **abapGit:** pull this repository into a local or Z package. It creates the report `ZCDS_FIELD_MAPPING` and the class `ZCL_CDS_FIELD_MAPPING`.
 - **Copy and paste:** create an executable report in SE38, for example `ZCDS_FIELD_MAPPING`, paste [standalone/zcds_field_mapping.abap](standalone/zcds_field_mapping.abap) over its source and activate. Everything is in that one source as local classes, selection texts included.
 
 No other dependency is needed.
@@ -46,7 +55,7 @@ On screen, pick what to look up:
 }
 ```
 
-`tables` holds the mapping of every table in the list, including view fields that could not be traced to a column (empty `tableField`). `successors` holds every successor in the system; it is empty on S/4HANA 2020.
+`tables` holds the mapping of every table in the list, including view fields that could not be traced to a column (empty `tableField`). `successors` holds every successor in the system.
 
 ### Table fields to CDS
 
@@ -65,7 +74,7 @@ The Match column tells you how far to trust a row:
 - **Same column**: the view field reads this column.
 - **In expression**: the view field uses this column inside an expression, so the value can differ. In `I_PRODUCT`, `LastChangedByUser` returns `MARA-AENAM`, or `ERNAM` when `AENAM` is empty. Click **Show** in the How to use column to see the definition. In JSON these rows carry `"computed": true`, the `expression` and the view it is `definedIn`.
 
-The Release column appears only when a listed view is not released for ABAP Cloud. SAP can name such a view as a successor: `EHEWAD_WA_TRRQLA` points to `I_WASTETRANSFERREQUESTHISTORY`, and reading that view gives the ATC finding "Usage of internal API". A view you enter yourself is checked the same way when the system has the API state list (see below).
+The Release column appears only when a listed view is not released for ABAP Cloud. SAP can name such a view as a successor: `EHEWAD_WA_TRRQLA` points to `I_WASTETRANSFERREQUESTHISTORY`, and reading that view gives the ATC finding "Usage of internal API". A view you enter yourself is checked the same way.
 
 ### Other objects
 
@@ -86,9 +95,7 @@ When an object has no successor, the report says whether it is already released 
 
 ### Where the successor list comes from
 
-Both modes read SAP's own successor and API state lists in the system (`ARS_W_API_SCCSSR`, `ARS_W_API_STATE`), contract C1, so the result matches your release and the check ATC runs with `releasedAPIDataSource = checkedSystem`. The list header shows the source.
-
-These lists are filled from S/4HANA 2022 on. On S/4HANA 2020 they are empty: the table mode then falls back to the pairs built into `ZCL_CDS_FIELD_MAPPING_PAIRS`, and the object mode tells you to look the object up in SAP's [objectReleaseInfo_PCELatest.json](https://github.com/SAP/abap-atc-cr-cv-s4hc/blob/main/src/objectReleaseInfo_PCELatest.json).
+Both modes read SAP's own successor and API state lists in the system (`ARS_W_API_SCCSSR`, `ARS_W_API_STATE`), contract C1. A successor counts as released only when SAP marks it for use in ABAP Cloud development, the same rule the ATC check applies. See [Which system you need](#which-system-you-need).
 
 ## Use with an AI assistant
 
@@ -118,11 +125,11 @@ Your release can have other views, other fields and other successors, and your s
 
 The import copies the data into the skill's `references` folder, keeps the previous files with a `.bak` suffix and records the release from the file. The downloaded file is not needed afterwards. Because it can hold your own extension fields, keep it and the updated skill to yourself.
 
-On releases before S/4HANA 2022 the system has no successor list. The downloaded file then holds the field mapping only (from the pairs built into the report), and the skill keeps the 2025 successor list it shipped with.
+On releases before S/4HANA 2022 the report does not run, so the skill's bundled S/4HANA 2025 data is what you work with. See [Which system you need](#which-system-you-need).
 
 ## How it works
 
-1. The table to CDS pairs come from the system's successor list. Where that list is empty, `ZCL_CDS_FIELD_MAPPING_PAIRS` supplies the pairs from SAP's `objectReleaseInfo_PCELatest.json`.
+1. The table to CDS pairs come from the system's successor list.
 2. For a view with a generated SQL view, the field-to-column resolution comes from `DD27S`, the dictionary's own record. Intermediate views are followed level by level, up to 10 levels. All branches of a `UNION` are tried.
 3. Computed fields and type-changing `CAST`s point at helper tables in `DD27S`. These are resolved from the view definition and confirmed against `DD03L`, or against the source view when the source is a view.
 4. View entities have no SQL view, so their definition is parsed through the XCO library, falling back to the DDL source.
@@ -133,7 +140,8 @@ On releases before S/4HANA 2022 the system has no successor list. The downloaded
 - A computed field can list several columns, one row each. The list says which columns it reads, not how it combines them.
 - A mapping means the view field reads that column. It does not prove that the view returns the same rows. Check the view's joins and filters before you replace a `SELECT`.
 - A pair is shown only if SAP's list names it. Use the CDS view input for anything else.
-- The object mode needs S/4HANA 2022 or later. Function modules are listed by their own name; SAP stores them under the function group.
+- The report needs S/4HANA 2022 or later; see [Which system you need](#which-system-you-need).
+- Function modules are listed by their own name; SAP stores them under the function group.
 - The report reads your own system, so fields added to a view by your extensions or add-ons are listed too.
 - Reading `DD27S` needs classic ABAP. The report does not run in ABAP Cloud, on BTP or in a public cloud tenant.
 
@@ -142,20 +150,15 @@ On releases before S/4HANA 2022 the system has no successor list. The downloaded
 | Release | Result |
 |---|---|
 | S4CORE 109 SP1, SAP_BASIS 816 | Full run with Download JSON: 294 pairs read from the system, 234 views, 10,004 standard CDS fields. 7,358 read one column, 280 use columns in an expression. 1,090 successors: 928 released for ABAP Cloud, 151 for key user apps only, 11 not released. |
-| S4CORE 105, SAP_BASIS 755 | The copy-and-paste source compiled and activated before the last two small fixes. Not run. The system's successor list holds no table to CDS pairs here, so the built-in pairs are used. |
+| S4CORE 107, SAP_BASIS 757 (S/4HANA 2022) | The successor list holds 204 table to CDS pairs (database read). The report was not run. |
+| S4CORE 105, SAP_BASIS 755 (S/4HANA 2020) | The successor list holds no table to CDS pairs (database read), so the report stops and points to the AI skill. |
 
-The class uses XCO, so releases older than the ones above may not compile.
+## Development
 
-## Update the pair list
-
-```bash
-python tools/update_pairs.py
-```
-
-This downloads SAP's latest file, regenerates the class and rebuilds the copy-and-paste source. Use `--product public` for the public cloud list, or `--file` for a local copy. After changing anything in `src/`, run `python tools/build_standalone.py` so the two stay the same.
+`standalone/zcds_field_mapping.abap` is generated from `src/`. After changing anything in `src/`, run `python tools/build_standalone.py` so the two stay the same.
 
 ## License
 
-MIT. The pair list is derived from [SAP/abap-atc-cr-cv-s4hc](https://github.com/SAP/abap-atc-cr-cv-s4hc), which is licensed under Apache-2.0.
+MIT. SAP publishes the same successor lists in [SAP/abap-atc-cr-cv-s4hc](https://github.com/SAP/abap-atc-cr-cv-s4hc) under Apache-2.0.
 
 This is an independent project and is not affiliated with or endorsed by SAP.

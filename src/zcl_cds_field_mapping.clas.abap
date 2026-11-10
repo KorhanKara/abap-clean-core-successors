@@ -3,7 +3,12 @@ CLASS zcl_cds_field_mapping DEFINITION
   CREATE PUBLIC.
 
   PUBLIC SECTION.
-    INTERFACES if_oo_adt_classrun.
+    TYPES: BEGIN OF ts_pair,
+             table_name TYPE string,
+             cds_name   TYPE string,
+             released   TYPE abap_bool,
+           END OF ts_pair,
+           tt_pair TYPE STANDARD TABLE OF ts_pair WITH EMPTY KEY.
 
     TYPES: BEGIN OF ts_field_map,
              cds_field   TYPE string,
@@ -23,7 +28,7 @@ CLASS zcl_cds_field_mapping DEFINITION
            tt_view_map TYPE STANDARD TABLE OF ts_view_map WITH EMPTY KEY.
 
     METHODS extract
-      IMPORTING it_pairs         TYPE zcl_cds_field_mapping_pairs=>tt_pair
+      IMPORTING it_pairs         TYPE tt_pair
       RETURNING VALUE(rt_result) TYPE tt_view_map.
 
     METHODS to_json
@@ -165,16 +170,6 @@ ENDCLASS.
 
 
 CLASS zcl_cds_field_mapping IMPLEMENTATION.
-  METHOD if_oo_adt_classrun~main.
-    DATA(lt_result) = extract( zcl_cds_field_mapping_pairs=>get( ) ).
-    out->write( to_json( lt_result ) ).
-    IF mt_errors IS NOT INITIAL.
-      out->write( `---ERRORS---` ).
-      out->write( mt_errors ).
-    ENDIF.
-  ENDMETHOD.
-
-
   METHOD extract.
     LOOP AT it_pairs INTO DATA(ls_pair).
       DATA(lv_cds) = to_upper( ls_pair-cds_name ).

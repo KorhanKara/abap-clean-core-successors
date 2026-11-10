@@ -93,8 +93,11 @@ CLASS lcl_report DEFINITION FINAL.
     DATA mv_source     TYPE string.
     DATA mo_extractor  TYPE REF TO zcl_cds_field_mapping.
 
+    METHODS has_successor_list
+      RETURNING VALUE(rv_found) TYPE abap_bool.
+
     METHODS all_pairs
-      RETURNING VALUE(rt_pairs) TYPE zcl_cds_field_mapping_pairs=>tt_pair.
+      RETURNING VALUE(rt_pairs) TYPE zcl_cds_field_mapping=>tt_pair.
 
     METHODS read_states
       IMPORTING it_keys          TYPE tt_api_key
@@ -119,10 +122,10 @@ CLASS lcl_report DEFINITION FINAL.
       RETURNING VALUE(rv_release) TYPE string.
 
     METHODS selected_pairs
-      RETURNING VALUE(rt_pairs) TYPE zcl_cds_field_mapping_pairs=>tt_pair.
+      RETURNING VALUE(rt_pairs) TYPE zcl_cds_field_mapping=>tt_pair.
 
     METHODS extract_pairs
-      IMPORTING it_pairs         TYPE zcl_cds_field_mapping_pairs=>tt_pair
+      IMPORTING it_pairs         TYPE zcl_cds_field_mapping=>tt_pair
       RETURNING VALUE(rt_result) TYPE zcl_cds_field_mapping=>tt_view_map.
 
     METHODS fill_rows
@@ -176,6 +179,12 @@ ENDCLASS.
 
 CLASS lcl_report IMPLEMENTATION.
   METHOD run.
+    IF has_successor_list( ) = abap_false.
+      MESSAGE 'This system has no SAP successor list (S/4HANA 2022 or later has one). Use the AI skill from the repository instead.'
+              TYPE 'I'.
+      RETURN.
+    ENDIF.
+
     IF p_json = abap_true.
       download_all( ).
       RETURN.
@@ -239,6 +248,16 @@ CLASS lcl_report IMPLEMENTATION.
   ENDMETHOD.
 
 
+  METHOD has_successor_list.
+    SELECT SINGLE FROM ars_w_api_sccssr
+      FIELDS @abap_true
+      WHERE object_type            = 'TABL'
+        AND successor_object_type  = 'DDLS'
+        AND compatibility_contract = 'C1'
+      INTO @rv_found.
+  ENDMETHOD.
+
+
   METHOD all_pairs.
     SELECT FROM ars_w_api_sccssr
       FIELDS object_id, successor_object_name
@@ -246,11 +265,6 @@ CLASS lcl_report IMPLEMENTATION.
         AND successor_object_type  = 'DDLS'
         AND compatibility_contract = 'C1'
       INTO TABLE @DATA(lt_successors).
-    IF lt_successors IS INITIAL.
-      mv_source = `the built-in list`.
-      rt_pairs = zcl_cds_field_mapping_pairs=>get( ).
-      RETURN.
-    ENDIF.
 
     mv_source = `this system`.
     DATA(lt_keys) = VALUE tt_api_key( ).
@@ -379,16 +393,6 @@ CLASS lcl_report IMPLEMENTATION.
 
 
   METHOD explain_missing.
-    SELECT SINGLE FROM ars_w_api_sccssr
-      FIELDS object_id
-      WHERE compatibility_contract = 'C1'
-      INTO @DATA(lv_any).
-    IF sy-subrc <> 0.
-      MESSAGE 'This system has no successor list (it needs S/4HANA 2022 or later). See SAP''s objectReleaseInfo_PCELatest.json.'
-              TYPE 'S' DISPLAY LIKE 'E'.
-      RETURN.
-    ENDIF.
-
     SELECT FROM ars_w_api_state
       FIELDS release_state, use_in_sap_cloud_platform AS cloud
       WHERE compatibility_contract = 'C1'
@@ -447,23 +451,21 @@ CLASS lcl_report IMPLEMENTATION.
 
 
   METHOD selected_pairs.
-    DATA(lt_all) = all_pairs( ).
     DATA(lv_table) = to_upper( p_table ).
 
     IF p_cds IS NOT INITIAL.
+      mv_source = `your input`.
       DATA(lv_cds) = to_upper( p_cds ).
-      DATA(lv_released) = VALUE #( lt_all[ cds_name = lv_cds ]-released DEFAULT abap_true ).
-      IF mv_source = `this system`.
-        DATA(lt_states) = read_states( VALUE #( ( object_type     = 'DDLS'
-                                                  object_id       = lv_cds
-                                                  sub_object_name = lv_cds ) ) ).
-        lv_released = xsdbool( availability( VALUE #( lt_states[ 1 ] OPTIONAL ) ) = c_released ).
-      ENDIF.
+      DATA(lt_states) = read_states( VALUE #( ( object_type     = 'DDLS'
+                                                object_id       = lv_cds
+                                                sub_object_name = lv_cds ) ) ).
       rt_pairs = VALUE #( ( table_name = lv_table
                             cds_name   = lv_cds
-                            released   = lv_released ) ).
+                            released   = xsdbool( availability( VALUE #( lt_states[ 1 ] OPTIONAL ) ) = c_released ) ) ).
       RETURN.
     ENDIF.
+
+    DATA(lt_all) = all_pairs( ).
 
     rt_pairs = lt_all.
     IF lv_table IS NOT INITIAL.

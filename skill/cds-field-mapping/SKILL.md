@@ -93,9 +93,18 @@ can load their own data:
    `--release` only overrides it.
 
 The one file holds both the mapping and the successor list. The import replaces
-both bundled files and keeps the old ones with a `.bak` suffix. On S/4HANA 2020 the
-report has no successor list to download, so the bundled one stays. The new files
-can hold the user's own fields, so they stay on their machine.
+both bundled files and keeps the old ones with a `.bak` suffix. The new files can
+hold the user's own fields, so they stay on their machine.
+
+## Releases before S/4HANA 2022
+
+The report needs S/4HANA 2022 or later: it reads SAP's successor list in the
+system, which is the same data ATC's "Usage of APIs" check reads, and SAP fills
+that list from 2022 on. On an older release the report stops, and this skill with
+its bundled S/4HANA 2025 data is the only source. When the user is on an older
+release, answer from the bundled data and say once that it comes from S/4HANA
+2025: a view, field or successor it names may not exist in their release yet, so
+they should check it in their system (SE11, ADT) before using it.
 
 Creating objects in an SAP system is the user's decision. Do not install or run
 the report for them without asking.

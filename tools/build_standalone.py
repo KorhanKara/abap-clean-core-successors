@@ -12,7 +12,7 @@ ROOT = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)),
 SRC = os.path.join(ROOT, "src")
 TARGET = os.path.join(ROOT, "standalone", "zcds_field_mapping.abap")
 
-LOCAL_NAMES = [("zcl_cds_field_mapping_pairs", "lcl_pairs"), ("zcl_cds_field_mapping", "lcl_mapping")]
+LOCAL_NAMES = [("zcl_cds_field_mapping", "lcl_mapping")]
 SCREEN_START = "\nCLASS lcl_report DEFINITION FINAL.\n"
 
 
@@ -42,8 +42,7 @@ def build():
     screen, _, rest = report.partition(SCREEN_START)
     if not rest:
         raise SystemExit("report layout changed: lcl_report definition not found")
-    classes = "\n\n".join(localize(read(name)) for name in
-                          ("zcl_cds_field_mapping_pairs.clas.abap", "zcl_cds_field_mapping.clas.abap"))
+    classes = localize(read("zcl_cds_field_mapping.clas.abap"))
     tail_marker = "\nAT SELECTION-SCREEN OUTPUT.\n"
     body, _, events = ("\n" + SCREEN_START.lstrip("\n") + rest).partition(tail_marker)
     if not events:
