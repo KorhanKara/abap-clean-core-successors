@@ -43,12 +43,28 @@ def load():
         return json.load(f)
 
 
-def data_release():
+SUCCESSOR_FILE = os.path.join(os.path.dirname(DATA_FILE), "successors.json")
+
+
+def data_release(part="mapping"):
     try:
         with open(VERSION_FILE, encoding="utf-8") as f:
-            return json.load(f).get("release", "unknown")
+            version = json.load(f)
     except (OSError, ValueError):
         return "unknown"
+    return (version.get(part) or {}).get("release") or version.get("release", "unknown")
+
+
+def successors_of(name, object_type=None):
+    try:
+        with open(SUCCESSOR_FILE, encoding="utf-8") as f:
+            rows = json.load(f)
+    except OSError:
+        return None
+    pattern = re.compile("^" + re.escape(name.upper()).replace(r"\*", ".*") + "$")
+    return [r for r in rows
+            if pattern.match(r.get("objectName", "").upper())
+            and (not object_type or r.get("objectType", "").upper() == object_type.upper())]
 
 
 def tidy(expression):
@@ -176,7 +192,20 @@ def main():
     ap.add_argument("--field", help="Field name, used with --table or --cds")
     ap.add_argument("--rewrite", help="A simple classic ABAP SELECT statement to rewrite against a CDS view")
     ap.add_argument("--allow-unreleased", action="store_true", help="Also consider not-yet-released CDS views")
+    ap.add_argument("--object", help="Any object name (function module, class, data element, CDS view, table); "
+                                     "* is a wildcard -> its successor(s)")
+    ap.add_argument("--type", help="Object type filter for --object, e.g. FUNC, CLAS, DTEL, DDLS")
     args = ap.parse_args()
+
+    if args.object:
+        rows = successors_of(args.object, args.type)
+        if rows is None:
+            print(json.dumps({"error": "references/successors.json is missing"}, indent=2))
+            sys.exit(1)
+        print(json.dumps({"object": args.object.upper(), "dataRelease": data_release("successors"),
+                          "note": "abapCloud: Released clears the ATC finding; Key user only and Not released do not.",
+                          "successors": rows}, indent=2, ensure_ascii=False))
+        return
 
     data = load()
 

@@ -7,12 +7,15 @@ Usage:
 import argparse
 import json
 import os
+import sys
 import urllib.request
 
-import build_standalone
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import build_standalone  # noqa: E402
 
 ROOT = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir))
 TARGET = os.path.join(ROOT, "src", "zcl_cds_field_mapping_pairs.clas.abap")
+SKILL_SUCCESSORS = os.path.join(ROOT, "skill", "cds-field-mapping", "references", "successors.json")
 BASE_URL = "https://raw.githubusercontent.com/SAP/abap-atc-cr-cv-s4hc/main/src/"
 FILES = {"pce": "objectReleaseInfo_PCELatest.json", "public": "objectReleaseInfoLatest.json"}
 
@@ -63,13 +66,44 @@ def table_cds_pairs(entries):
     return sorted(pairs)
 
 
+STATES = {"released": "RELEASED", "deprecated": "DEPRECATED",
+          "notToBeReleased": "NOT_TO_BE_RELEASED", "notToBeReleasedStable": "NOT_TO_BE_RELEASED_STABLE"}
+
+
+def display_type(item):
+    return item["tadirObject"] if item.get("objectType") in (None, "CDS_STOB") else item["objectType"]
+
+
+def skill_successors(entries):
+    """Successor rows in the format of the report's Download JSON, for the skill's bundled data."""
+    states = {(display_type(e), e["objectKey"]): e.get("state") for e in entries}
+    rows = []
+    for entry in entries:
+        for successor in entry.get("successors") or []:
+            state = states.get((display_type(successor), successor["objectKey"]))
+            rows.append({"objectType": display_type(entry),
+                         "objectName": entry["objectKey"],
+                         "objectState": STATES.get(entry.get("state"), "NO ENTRY"),
+                         "successorType": display_type(successor),
+                         "successorName": successor["objectKey"],
+                         "abapCloud": "Released" if state == "released" else "Not released"})
+    return sorted(rows, key=lambda r: (r["objectType"], r["objectName"], r["successorName"]))
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--product", choices=sorted(FILES), default="pce")
     parser.add_argument("--file", help="read a local copy instead of downloading")
     args = parser.parse_args()
 
-    pairs = table_cds_pairs(load(args.product, args.file)["objectReleaseInfo"])
+    entries = load(args.product, args.file)["objectReleaseInfo"]
+    successors = skill_successors(entries)
+    with open(SKILL_SUCCESSORS, "w", encoding="utf-8", newline="\n") as f:
+        json.dump(successors, f, indent=2)
+        f.write("\n")
+    print(f"{len(successors)} successors written to {SKILL_SUCCESSORS}")
+
+    pairs = table_cds_pairs(entries)
     rows = "\n".join(
         f"      ( table_name = `{table}` cds_name = `{cds}` released = {'abap_true' if released else 'abap_false'} )"
         for table, cds, released in pairs)

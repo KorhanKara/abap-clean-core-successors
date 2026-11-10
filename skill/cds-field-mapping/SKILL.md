@@ -1,6 +1,6 @@
 ---
 name: cds-field-mapping
-description: Answer which released CDS view field replaces a classic SAP table field (MARA-MATNR to I_PRODUCT-Product) and rewrite simple SELECTs from a classic table to a released CDS view, from a field-level mapping read out of a real SAP system. Use whenever the user asks what to use instead of a table or table field, which CDS view replaces a table, how to migrate a SELECT to a released API or clean core, or shares a SELECT on a classic table. Also use to load the user's own mapping file downloaded from the ZCDS_FIELD_MAPPING report.
+description: Answer which released CDS view field replaces a classic SAP table field (MARA-MATNR to I_PRODUCT-Product), what replaces another SAP object such as a function module, class or old CDS view, and rewrite simple SELECTs from a classic table to a released CDS view, from data read out of a real SAP system. Use whenever the user asks what to use instead of a table, table field, function module, BAPI, class or data element, which CDS view replaces a table, how to migrate a SELECT to a released API or clean core, or shares a SELECT on a classic table. Also use to load the user's own file downloaded from the ZCDS_FIELD_MAPPING report.
 ---
 
 # CDS field mapping
@@ -21,6 +21,8 @@ python3 scripts/cds_field_mapping.py --table MARA --field MATNR   # which view f
 python3 scripts/cds_field_mapping.py --table MARA                 # all views and their full mapping
 python3 scripts/cds_field_mapping.py --cds I_PRODUCT --field ProductGroup   # where a view field comes from
 python3 scripts/cds_field_mapping.py --rewrite "SELECT SINGLE matnr matkl FROM mara INTO @DATA(ls_mara) WHERE matnr = @lv_matnr."
+python3 scripts/cds_field_mapping.py --object BAPI_PROCORD_GET_DETAIL   # successor of any object, * as wildcard
+python3 scripts/cds_field_mapping.py --object I_STOCK* --type DDLS
 ```
 
 Not-released views are skipped. Add `--allow-unreleased` only to explain why a
@@ -51,6 +53,14 @@ view SAP names is not usable.
 - **A mapping is not proof of the same rows.** The view can filter or join.
   Present rewrites as drafts to compile and test, and name the release the data
   was read from (`dataRelease` in the output) when it matters.
+- **`abapCloud` decides whether a successor helps.** `Released` clears the ATC
+  finding "Usage of APIs". `Key user only` is released for key user apps but not
+  for ABAP Cloud, so ATC still reports it as an internal API; say so instead of
+  recommending it. `Not released` is not usable either.
+- **A function module has no field mapping.** For `--object` results, give the
+  successor and its type; for a CDS successor of a table, continue with `--table`.
+- **No row for an object means SAP's list names no successor.** It does not mean
+  the object is safe to use. Say what the data shows and do not invent a successor.
 
 ## The data
 
@@ -60,9 +70,15 @@ and `tableField`. Rows with `computed: true` also carry `expression` and
 `definedIn`: the view field reads that column inside an expression. A row with an
 empty `tableField` could not be traced to a column of the table.
 
-`references/DATA_VERSION.json` records the release the data was read from. It is
-read from a standard system, so it holds no customer or add-on fields, and fields
-of other releases can differ.
+`references/successors.json` holds one row per object and successor:
+`objectType`, `objectName`, `objectState`, `successorType`, `successorName` and
+`abapCloud`. Function modules appear under their own name.
+
+`references/DATA_VERSION.json` records where each file came from. The bundled
+mapping is read from a standard system, so it holds no customer or add-on fields,
+and fields of other releases can differ. The bundled successor list comes from
+SAP's public file, which lists only objects released for ABAP Cloud, so successors
+released for key user apps only are missing until the user loads their own file.
 
 ## Use the user's own system
 
@@ -71,12 +87,13 @@ can load their own data:
 
 1. Install the `ZCDS_FIELD_MAPPING` report from this repository with abapGit.
 2. Run it with **Download JSON** and save the file.
-3. Run `python3 scripts/import_mapping.py <file>`. Add `--release "S4CORE 109 SP01"`
-   to label the data; never guess the release.
+3. Run `python3 scripts/import_mapping.py <file>`. The file carries its release;
+   `--release` only overrides it.
 
-The import replaces the bundled file and keeps the old one as
-`core-data-services.json.bak`. The new file can hold the user's own fields, so it
-stays on their machine.
+The one file holds both the mapping and the successor list. The import replaces
+both bundled files and keeps the old ones with a `.bak` suffix. On S/4HANA 2020 the
+report has no successor list to download, so the bundled one stays. The new files
+can hold the user's own fields, so they stay on their machine.
 
 Creating objects in an SAP system is the user's decision. Do not install or run
 the report for them without asking.

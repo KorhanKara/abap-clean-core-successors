@@ -27,10 +27,26 @@ No other dependency is needed.
 
 ## Use
 
-Run `ZCDS_FIELD_MAPPING` in SE38. Pick what to look up first:
+Run `ZCDS_FIELD_MAPPING` in SE38. Choose **Show on screen** to look something up, or **Download JSON** to get everything in one file.
+
+On screen, pick what to look up:
 
 - **Table fields to CDS**: the field-level mapping of a classic table to its successor views.
 - **Other objects**: the successor of any object SAP has replaced, for example a function module, class, data element or older CDS view.
+
+**Download JSON** hides all other inputs and writes one file, for scripts, CI or AI assistants:
+
+```json
+{
+  "release": "S4CORE 109 SP1",
+  "pairsFrom": "this system",
+  "tables": [ { "cdsName": "I_PRODUCT", "tableName": "MARA", "released": true, "mapping": [ ... ] } ],
+  "successors": [ { "objectType": "FUNC", "objectName": "BAPI_PROCORD_GET_DETAIL", "objectState": "NOT_TO_BE_RELEASED",
+                    "successorType": "DDLS", "successorName": "I_MANUFACTURINGORDER", "abapCloud": "Released" } ]
+}
+```
+
+`tables` holds the mapping of every table in the list, including view fields that could not be traced to a column (empty `tableField`). `successors` holds every successor in the system; it is empty on S/4HANA 2020.
 
 ### Table fields to CDS
 
@@ -38,9 +54,9 @@ Run `ZCDS_FIELD_MAPPING` in SE38. Pick what to look up first:
 |---|---|
 | Table | Table to look up. Empty means all tables in the list. Only on screen. |
 | Table fields | One or more fields of the table, for example the ones your `SELECT` reads. The views covering the most of them come first, and the list header says whether a single view covers them all. A field no listed view covers appears with an empty view. Needs a table. Only on screen. |
-| CDS view | Use this view instead of SAP's list. Works for any table and view pair, including your own views. Needs a table. Only on screen. |
-| Show on screen | ALV list. Use its standard export for a spreadsheet. |
-| Download JSON | Write the mapping of all tables to a file, for scripts, CI or AI assistants. The other inputs are hidden, and the report asks for the file when you run it. The file also holds view fields that could not be traced to a column, with an empty `tableField`. |
+| CDS view | Use this view instead of SAP's list. Works for any table and view pair, including your own views. Needs a table. |
+
+The list is an ALV; use its standard export for a spreadsheet.
 
 Click a table or CDS view in the list to see its key fields in a pop-up. Use them to write the join conditions when one view is not enough.
 
@@ -57,8 +73,8 @@ The Release column appears only when a listed view is not released for ABAP Clou
 |---|---|
 | Object name | Name of the object, with `*` as a wildcard. For a function module, give the function module, not its group. |
 | Object type | Optional filter, for example `FUNC`, `CLAS`, `INTF`, `DTEL`, `DDLS`, `TABL`. |
-| Show on screen | ALV list of the object, its state, its successor and whether the successor can be used in ABAP Cloud. |
-| Download JSON | Write all successors of the system to a file. |
+
+The list shows the object, its state, its successor and whether the successor can be used in ABAP Cloud.
 
 The ABAP Cloud column says whether the successor clears the ATC finding:
 
@@ -76,9 +92,9 @@ These lists are filled from S/4HANA 2022 on. On S/4HANA 2020 they are empty: the
 
 ## Use with an AI assistant
 
-`skill/cds-field-mapping` is an agent skill that answers the same question in chat: ask "what do I use instead of `MARA-MATNR`?" and it looks the field up instead of guessing a name. It can also rewrite a simple `SELECT` on a classic table into one on the released view, with every renamed field aliased to its old name.
+`skill/cds-field-mapping` is an agent skill that answers the same questions in chat: ask "what do I use instead of `MARA-MATNR`?" or "what replaces `BAPI_PROCORD_GET_DETAIL`?" and it looks the answer up instead of guessing a name. It can also rewrite a simple `SELECT` on a classic table into one on the released view, with every renamed field aliased to its old name.
 
-It ships with the mapping of 294 pairs read from an S4CORE 109 SP01 system, standard fields only, so it works without an SAP connection. To use your own release and your own extension fields, run the report with Download JSON and load the file:
+It ships with the mapping of 294 pairs read from an S4CORE 109 SP01 system, standard fields only, and with the successor list from SAP's public file, so it works without an SAP connection. SAP's file lists only objects released for ABAP Cloud, so it cannot tell you that a successor is released for key user apps only; your own system can. To use your own release, your own extension fields and the full successor list, run the report with Download JSON and load the file:
 
 ```bash
 python3 skill/cds-field-mapping/scripts/import_mapping.py core-data-services.json
@@ -118,7 +134,7 @@ The class uses XCO, so releases older than the ones above may not compile.
 python tools/update_pairs.py
 ```
 
-This downloads SAP's latest file, regenerates the class and rebuilds the copy-and-paste source. Use `--product public` for the public cloud list, or `--file` for a local copy. After changing anything in `src/`, run `python tools/build_standalone.py` so the two stay the same.
+This downloads SAP's latest file, regenerates the class, the skill's bundled successor list and the copy-and-paste source. Use `--product public` for the public cloud list, or `--file` for a local copy. After changing anything in `src/`, run `python tools/build_standalone.py` so the two stay the same.
 
 ## License
 

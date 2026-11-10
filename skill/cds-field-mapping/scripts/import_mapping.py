@@ -1,12 +1,17 @@
 #!/usr/bin/env python3
 """
-Install a mapping file downloaded from the ZCDS_FIELD_MAPPING report as
-references/core-data-services.json and record it in references/DATA_VERSION.json.
+Install a file downloaded from the ZCDS_FIELD_MAPPING report (Download JSON) as
+this skill's data.
 
 Usage:
     python3 import_mapping.py core-data-services.json [--release "S4CORE 109 SP01"]
 
-The previous file is kept as core-data-services.json.bak.
+The file holds the table field mapping ("tables") and the successor list
+("successors"). They are written to references/core-data-services.json and
+references/successors.json, and the release the report read from the system
+is recorded in references/DATA_VERSION.json. A file from an older report
+version (a plain list of tables) is accepted too. The previous files are kept
+with a .bak suffix.
 """
 import argparse
 import datetime
@@ -16,22 +21,44 @@ import shutil
 import sys
 
 _REF = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir, "references"))
-TARGET = os.path.join(_REF, "core-data-services.json")
+MAPPING_FILE = os.path.join(_REF, "core-data-services.json")
+SUCCESSOR_FILE = os.path.join(_REF, "successors.json")
 VERSION_FILE = os.path.join(_REF, "DATA_VERSION.json")
 
 
-def load_views(path):
+def load_export(path):
     with open(path, encoding="utf-8-sig") as f:
-        views = json.load(f)
-    if not isinstance(views, list) or not views:
-        sys.exit("expected a non-empty JSON array")
+        data = json.load(f)
+    if isinstance(data, list):
+        return {"tables": data, "successors": None, "release": None, "pairsFrom": None}
+    if isinstance(data, dict) and isinstance(data.get("tables"), list):
+        return data
+    sys.exit("expected the JSON file written by ZCDS_FIELD_MAPPING")
+
+
+def check_tables(views):
+    if not views:
+        sys.exit("the file holds no table mapping")
     for view in views:
         if not {"cdsName", "tableName", "released", "mapping"} <= view.keys():
             sys.exit(f"unexpected entry shape: {sorted(view.keys())}")
         for row in view["mapping"]:
             if not {"cdsField", "tableField"} <= row.keys():
                 sys.exit(f"unexpected mapping row in {view['cdsName']}: {sorted(row.keys())}")
-    return views
+
+
+def check_successors(rows):
+    for row in rows:
+        if not {"objectType", "objectName", "successorType", "successorName", "abapCloud"} <= row.keys():
+            sys.exit(f"unexpected successor row: {sorted(row.keys())}")
+
+
+def write_json(path, data):
+    if os.path.exists(path):
+        shutil.copyfile(path, path + ".bak")
+    with open(path, "w", encoding="utf-8", newline="\n") as f:
+        json.dump(data, f, indent=2, ensure_ascii=False)
+        f.write("\n")
 
 
 def summarize(views):
@@ -46,22 +73,39 @@ def summarize(views):
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("file", help="JSON file written by ZCDS_FIELD_MAPPING with Download JSON")
-    parser.add_argument("--release", default="user's own system",
-                        help="software release of the system the file came from, e.g. 'S4CORE 109 SP01'")
+    parser.add_argument("--release", help="label for the data; default: the release stored in the file")
     args = parser.parse_args()
 
-    views = load_views(args.file)
-    if os.path.exists(TARGET):
-        shutil.copyfile(TARGET, TARGET + ".bak")
-    with open(TARGET, "w", encoding="utf-8", newline="\n") as f:
-        json.dump(views, f, indent=2, ensure_ascii=False)
-        f.write("\n")
+    export = load_export(args.file)
+    check_tables(export["tables"])
+    successors = export.get("successors")
+    if successors:
+        check_successors(successors)
 
-    summary = summarize(views)
-    version = {"source": "ZCDS_FIELD_MAPPING report, Download JSON",
-               "release": args.release,
-               "generated": datetime.date.today().isoformat(),
-               **summary}
+    try:
+        with open(VERSION_FILE, encoding="utf-8") as f:
+            version = json.load(f)
+    except (OSError, ValueError):
+        version = {}
+
+    write_json(MAPPING_FILE, export["tables"])
+    summary = summarize(export["tables"])
+    version["mapping"] = {"source": "ZCDS_FIELD_MAPPING report, Download JSON",
+                          "release": args.release or export.get("release") or "user's own system",
+                          "pairsFrom": export.get("pairsFrom") or "unknown",
+                          "generated": datetime.date.today().isoformat(),
+                          **summary}
+
+    if successors:
+        write_json(SUCCESSOR_FILE, successors)
+        version["successors"] = {"source": "ZCDS_FIELD_MAPPING report, Download JSON",
+                                 "release": version["mapping"]["release"],
+                                 "generated": version["mapping"]["generated"],
+                                 "rows": len(successors)}
+        summary["successors"] = len(successors)
+    else:
+        summary["successors"] = "not in the file, kept the existing list"
+
     with open(VERSION_FILE, "w", encoding="utf-8", newline="\n") as f:
         json.dump(version, f, indent=2)
         f.write("\n")

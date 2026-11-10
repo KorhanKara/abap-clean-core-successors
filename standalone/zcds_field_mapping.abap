@@ -4,8 +4,8 @@ REPORT zcds_field_mapping.
 
 DATA gv_field TYPE fieldname.
 
-PARAMETERS: p_tab  RADIOBUTTON GROUP what DEFAULT 'X' USER-COMMAND what,
-            p_obj  RADIOBUTTON GROUP what.
+PARAMETERS: p_tab  RADIOBUTTON GROUP what DEFAULT 'X' USER-COMMAND what MODIF ID wht,
+            p_obj  RADIOBUTTON GROUP what MODIF ID wht.
 SELECTION-SCREEN SKIP.
 PARAMETERS: p_alv  RADIOBUTTON GROUP out DEFAULT 'X' USER-COMMAND mode,
             p_json RADIOBUTTON GROUP out.
@@ -1131,6 +1131,13 @@ CLASS lcl_report DEFINITION FINAL.
 
     TYPES tt_name_range TYPE RANGE OF ars_w_api_sccssr-sub_object_name.
 
+    TYPES: BEGIN OF ts_export,
+             release    TYPE string,
+             pairs_from TYPE string,
+             tables     TYPE lcl_mapping=>tt_view_map,
+             successors TYPE tt_successor,
+           END OF ts_export.
+
     CONSTANTS: c_same_column   TYPE c LENGTH 13 VALUE 'Same column',
                c_in_expression TYPE c LENGTH 13 VALUE 'In expression',
                c_released      TYPE c LENGTH 13 VALUE 'Released',
@@ -1166,7 +1173,8 @@ CLASS lcl_report DEFINITION FINAL.
 
     METHODS show_successors.
 
-    METHODS download_successors.
+    METHODS system_release
+      RETURNING VALUE(rv_release) TYPE string.
 
     METHODS selected_pairs
       RETURNING VALUE(rt_pairs) TYPE lcl_pairs=>tt_pair.
@@ -1226,17 +1234,13 @@ ENDCLASS.
 
 CLASS lcl_report IMPLEMENTATION.
   METHOD run.
-    IF p_obj = abap_true.
-      IF p_json = abap_true.
-        download_successors( ).
-      ELSE.
-        show_objects( ).
-      ENDIF.
+    IF p_json = abap_true.
+      download_all( ).
       RETURN.
     ENDIF.
 
-    IF p_json = abap_true.
-      download_all( ).
+    IF p_obj = abap_true.
+      show_objects( ).
       RETURN.
     ENDIF.
 
@@ -1269,10 +1273,27 @@ CLASS lcl_report IMPLEMENTATION.
     ENDIF.
 
     mo_extractor = NEW #( ).
-    DATA(lt_result) = extract_pairs( all_pairs( ) ).
-    download( iv_json    = mo_extractor->to_json( lt_result )
+    DATA(ls_export) = VALUE ts_export( release    = system_release( )
+                                       tables     = extract_pairs( all_pairs( ) )
+                                       successors = read_successors( VALUE #( ) ) ).
+    ls_export-pairs_from = mv_source.
+
+    download( iv_json    = /ui2/cl_json=>serialize( data        = ls_export
+                                                    pretty_name = /ui2/cl_json=>pretty_mode-camel_case )
               iv_file    = lv_file
-              iv_written = |{ lines( lt_result ) } views, pairs from { mv_source },| ).
+              iv_written = |{ lines( ls_export-tables ) } views and { lines( ls_export-successors ) } successors| ).
+  ENDMETHOD.
+
+
+  METHOD system_release.
+    SELECT FROM cvers
+      FIELDS component, release, extrelease
+      WHERE component IN ( 'S4CORE', 'SAP_BASIS' )
+      INTO TABLE @DATA(lt_components).
+
+    DATA(ls_component) = VALUE #( lt_components[ component = 'S4CORE' ]
+                                  DEFAULT VALUE #( lt_components[ component = 'SAP_BASIS' ] OPTIONAL ) ).
+    rv_release = |{ ls_component-component } { ls_component-release } SP{ ls_component-extrelease ALPHA = OUT }|.
   ENDMETHOD.
 
 
@@ -1461,25 +1482,6 @@ CLASS lcl_report IMPLEMENTATION.
       CATCH cx_salv_error INTO DATA(lx_error).
         MESSAGE lx_error TYPE 'S' DISPLAY LIKE 'E'.
     ENDTRY.
-  ENDMETHOD.
-
-
-  METHOD download_successors.
-    DATA(lt_rows) = read_successors( VALUE #( ) ).
-    IF lt_rows IS INITIAL.
-      MESSAGE 'This system has no successor list (it needs S/4HANA 2022 or later).' TYPE 'S' DISPLAY LIKE 'E'.
-      RETURN.
-    ENDIF.
-
-    DATA(lv_file) = choose_file( `successors.json` ).
-    IF lv_file IS INITIAL.
-      RETURN.
-    ENDIF.
-
-    download( iv_json    = /ui2/cl_json=>serialize( data        = lt_rows
-                                                    pretty_name = /ui2/cl_json=>pretty_mode-camel_case )
-              iv_file    = lv_file
-              iv_written = |{ lines( lt_rows ) } successors| ).
   ENDMETHOD.
 
 
@@ -1858,7 +1860,8 @@ INITIALIZATION.
 AT SELECTION-SCREEN OUTPUT.
   LOOP AT SCREEN.
     IF ( screen-group1 = 'TAB' AND ( p_obj = abap_true OR p_json = abap_true ) )
-    OR ( screen-group1 = 'OBJ' AND ( p_tab = abap_true OR p_json = abap_true ) ).
+    OR ( screen-group1 = 'OBJ' AND ( p_tab = abap_true OR p_json = abap_true ) )
+    OR ( screen-group1 = 'WHT' AND p_json = abap_true ).
       screen-active = '0'.
       MODIFY SCREEN.
     ENDIF.
