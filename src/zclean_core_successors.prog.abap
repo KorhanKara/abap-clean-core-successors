@@ -718,6 +718,8 @@ CLASS lcl_report IMPLEMENTATION.
           )->set_cell_type( if_salv_c_cell_type=>hotspot ).
         CAST cl_salv_column_table( lo_columns->get_column( 'CDS_VIEW' )
           )->set_cell_type( if_salv_c_cell_type=>hotspot ).
+        CAST cl_salv_column_table( lo_columns->get_column( 'TABLE_FIELD' ) )->set_key( ).
+        CAST cl_salv_column_table( lo_columns->get_column( 'CDS_FIELD' ) )->set_key( ).
 
         DATA(lo_events) = lo_alv->get_event( ).
         SET HANDLER on_link_click FOR lo_events.
