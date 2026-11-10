@@ -1311,11 +1311,15 @@ CLASS lcl_report IMPLEMENTATION.
     ENDIF.
 
     mv_source = `this system`.
-    DATA(lt_states) = read_states( VALUE #( FOR ls_key IN lt_successors
-                                            ( object_type     = 'DDLS'
-                                              object_id       = ls_key-successor_object_name
-                                              sub_object_name = ls_key-successor_object_name ) ) ).
+    DATA(lt_keys) = VALUE tt_api_key( ).
     LOOP AT lt_successors INTO DATA(ls_successor).
+      INSERT VALUE #( object_type     = 'DDLS'
+                      object_id       = ls_successor-successor_object_name
+                      sub_object_name = ls_successor-successor_object_name ) INTO TABLE lt_keys.
+    ENDLOOP.
+    DATA(lt_states) = read_states( lt_keys ).
+
+    LOOP AT lt_successors INTO ls_successor.
       DATA(ls_state) = VALUE #( lt_states[ object_type     = 'DDLS'
                                            object_id       = ls_successor-successor_object_name
                                            sub_object_name = ls_successor-successor_object_name ] OPTIONAL ).
