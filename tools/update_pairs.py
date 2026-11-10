@@ -9,6 +9,8 @@ import json
 import os
 import urllib.request
 
+import build_standalone
+
 ROOT = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir))
 TARGET = os.path.join(ROOT, "src", "zcl_cds_field_mapping_pairs.clas.abap")
 BASE_URL = "https://raw.githubusercontent.com/SAP/abap-atc-cr-cv-s4hc/main/src/"
@@ -74,6 +76,7 @@ def main():
     with open(TARGET, "w", encoding="utf-8", newline="\n") as f:
         f.write(CLASS.format(rows=rows))
     print(f"{len(pairs)} pairs written to {TARGET}")
+    build_standalone.build()
 
 
 if __name__ == "__main__":

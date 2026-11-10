@@ -35,9 +35,24 @@ DATA_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                          os.pardir, "references", "core-data-services.json")
 
 
+VERSION_FILE = os.path.join(os.path.dirname(DATA_FILE), "DATA_VERSION.json")
+
+
 def load():
     with open(DATA_FILE, encoding="utf-8") as f:
         return json.load(f)
+
+
+def data_release():
+    try:
+        with open(VERSION_FILE, encoding="utf-8") as f:
+            return json.load(f).get("release", "unknown")
+    except (OSError, ValueError):
+        return "unknown"
+
+
+def tidy(expression):
+    return " ".join((expression or "").split())
 
 
 def views_for_table(data, table_name, allow_unreleased=False):
@@ -73,7 +88,7 @@ def cds_field_for_table(view, field_name):
 
 
 def expressions_using(view, field_name):
-    return [{"cdsField": m.get("cdsField"), "expression": m.get("expression"), "definedIn": m.get("definedIn")}
+    return [{"cdsField": m.get("cdsField"), "expression": tidy(m.get("expression")), "definedIn": m.get("definedIn")}
             for m in view.get("mapping", [])
             if m.get("computed") and m.get("tableField", "").upper() == field_name.upper()]
 
@@ -149,7 +164,9 @@ def rewrite_select(data, statement, allow_unreleased=False):
             result["usedInExpression"] = in_expression
         results.append(result)
 
-    return {"originalTable": table.upper(), "candidates": results}
+    results.sort(key=lambda r: len(r["unmappedFields"]))
+    return {"originalTable": table.upper(), "dataRelease": data_release(),
+            "note": "Candidates are sorted by fewest unmapped fields.", "candidates": results}
 
 
 def main():
@@ -175,7 +192,8 @@ def main():
             if used:
                 row["usedInExpression"] = used
             out.append(row)
-        print(json.dumps({"table": args.table.upper(), "field": args.field, "results": out}, indent=2, ensure_ascii=False))
+        print(json.dumps({"table": args.table.upper(), "field": args.field, "dataRelease": data_release(),
+                          "results": out}, indent=2, ensure_ascii=False))
     elif args.table:
         views = views_for_table(data, args.table, args.allow_unreleased)
         print(json.dumps({"table": args.table.upper(), "views": views}, indent=2, ensure_ascii=False))
@@ -184,13 +202,14 @@ def main():
         if not view:
             print(json.dumps({"found": False}, indent=2))
         else:
-            result = {"found": True, "cdsView": view["cdsName"], "tableName": view["tableName"],
-                      "released": view.get("released"),
-                      "tableField": next((m.get("tableField") for m in rows if not m.get("computed")), "")}
             computed = [m for m in rows if m.get("computed")]
+            result = {"found": True, "cdsView": view["cdsName"], "tableName": view["tableName"],
+                      "released": view.get("released"), "dataRelease": data_release(),
+                      "computed": bool(computed),
+                      "tableField": next((m.get("tableField") for m in rows if not m.get("computed")), "")}
             if computed:
                 result["readsColumns"] = [m.get("tableField") for m in computed]
-                result["expression"] = computed[0].get("expression")
+                result["expression"] = tidy(computed[0].get("expression"))
                 result["definedIn"] = computed[0].get("definedIn")
             print(json.dumps(result, indent=2, ensure_ascii=False))
     else:

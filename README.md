@@ -18,7 +18,12 @@ It only reads. It writes nothing to the database and opens no outbound connectio
 
 ## Install
 
-Pull this repository with [abapGit](https://abapgit.org) into a local or Z package. No other dependency is needed.
+Two ways, same code:
+
+- **abapGit:** pull this repository into a local or Z package. It creates the report `ZCDS_FIELD_MAPPING` and the classes `ZCL_CDS_FIELD_MAPPING` and `ZCL_CDS_FIELD_MAPPING_PAIRS`.
+- **Copy and paste:** create an executable report in SE38, for example `ZCDS_FIELD_MAPPING`, paste [standalone/zcds_field_mapping.abap](standalone/zcds_field_mapping.abap) over its source and activate. Everything is in that one source as local classes, selection texts included.
+
+No other dependency is needed.
 
 ## Use
 
@@ -74,7 +79,7 @@ Copy the `skill/cds-field-mapping` folder to wherever your assistant loads skill
 | Release | Result |
 |---|---|
 | S4CORE 109 SP01, SAP_BASIS 816 | Full run: 294 pairs, 234 views, 10,004 standard CDS fields. 7,358 read one column, 280 use columns in an expression. |
-| SAP_BASIS 755 | An earlier build compiled and activated. The current build is untested. Not run. |
+| SAP_BASIS 755 | The copy-and-paste source of the current build compiles and activates. Not run. |
 
 The class uses XCO, so releases older than the ones above may not compile.
 
@@ -84,7 +89,7 @@ The class uses XCO, so releases older than the ones above may not compile.
 python tools/update_pairs.py
 ```
 
-This downloads SAP's latest file and regenerates the class. Use `--product public` for the public cloud list, or `--file` for a local copy.
+This downloads SAP's latest file, regenerates the class and rebuilds the copy-and-paste source. Use `--product public` for the public cloud list, or `--file` for a local copy. After changing anything in `src/`, run `python tools/build_standalone.py` so the two stay the same.
 
 ## License
 

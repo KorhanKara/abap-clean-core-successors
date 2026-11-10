@@ -14,6 +14,8 @@ not: `MARA-MATKL` is `ProductGroup`, not `MaterialGroup`.
 
 ## Look it up
 
+Run the scripts from this skill's folder. Use `python3`, or `py -3` on Windows.
+
 ```bash
 python3 scripts/cds_field_mapping.py --table MARA --field MATNR   # which view field replaces this field
 python3 scripts/cds_field_mapping.py --table MARA                 # all views and their full mapping
@@ -28,8 +30,11 @@ view SAP names is not usable.
 
 - **Several views can cover one field.** `MARA-MATNR` is `Product` in five views.
   Prefer the view that covers every field the user's `SELECT` reads, so the
-  statement keeps one source. Run `--rewrite` or `--table` with all the fields and
-  compare `unmappedFields` across candidates.
+  statement keeps one source. `--rewrite` sorts candidates by fewest
+  `unmappedFields`. For a single field the data gives no ranking: list the views
+  and ask which other fields the user reads, instead of picking one from memory.
+- **`computed: true` in a `--cds --field` answer** means the view field has no
+  single column: `readsColumns` and `expression` say what it is built from.
 - **Alias every renamed field** as `CdsField AS original_field`. The rest of the
   program still uses the old names, and the alias keeps the change to one
   statement. `--rewrite` already does this; do the same in any rewrite you write
@@ -44,8 +49,8 @@ view SAP names is not usable.
 - **An empty mapping can be correct.** A view SAP names as successor can read a
   different table or take a field through an association.
 - **A mapping is not proof of the same rows.** The view can filter or join.
-  Present rewrites as drafts to compile and test, and name the view's release
-  (below) when it matters.
+  Present rewrites as drafts to compile and test, and name the release the data
+  was read from (`dataRelease` in the output) when it matters.
 
 ## The data
 
