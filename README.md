@@ -94,7 +94,7 @@ These lists are filled from S/4HANA 2022 on. On S/4HANA 2020 they are empty: the
 
 `skill/cds-field-mapping` is an agent skill that answers the same questions in chat: ask "what do I use instead of `MARA-MATNR`?" or "what replaces `BAPI_PROCORD_GET_DETAIL`?" and it looks the answer up instead of guessing a name. It can also rewrite a simple `SELECT` on a classic table into one on the released view, with every renamed field aliased to its old name.
 
-It ships with the mapping of 294 pairs read from an S4CORE 109 SP01 system, standard fields only, and with the successor list from SAP's public file, so it works without an SAP connection. SAP's file lists only objects released for ABAP Cloud, so it cannot tell you that a successor is released for key user apps only; your own system can. To use your own release, your own extension fields and the full successor list, run the report with Download JSON and load the file:
+It ships with the mapping of 294 pairs and 1,090 successors read from an S4CORE 109 SP1 system, standard objects and fields only, so it works without an SAP connection. To use your own release and your own extension fields, run the report with Download JSON and load the file:
 
 ```bash
 python3 skill/cds-field-mapping/scripts/import_mapping.py core-data-services.json
@@ -134,7 +134,7 @@ The class uses XCO, so releases older than the ones above may not compile.
 python tools/update_pairs.py
 ```
 
-This downloads SAP's latest file, regenerates the class, the skill's bundled successor list and the copy-and-paste source. Use `--product public` for the public cloud list, or `--file` for a local copy. After changing anything in `src/`, run `python tools/build_standalone.py` so the two stay the same.
+This downloads SAP's latest file, regenerates the class and rebuilds the copy-and-paste source. Use `--product public` for the public cloud list, or `--file` for a local copy. After changing anything in `src/`, run `python tools/build_standalone.py` so the two stay the same.
 
 ## License
 

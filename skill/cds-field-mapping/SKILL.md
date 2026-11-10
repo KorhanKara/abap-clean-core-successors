@@ -74,11 +74,10 @@ empty `tableField` could not be traced to a column of the table.
 `objectType`, `objectName`, `objectState`, `successorType`, `successorName` and
 `abapCloud`. Function modules appear under their own name.
 
-`references/DATA_VERSION.json` records where each file came from. The bundled
-mapping is read from a standard system, so it holds no customer or add-on fields,
-and fields of other releases can differ. The bundled successor list comes from
-SAP's public file, which lists only objects released for ABAP Cloud, so successors
-released for key user apps only are missing until the user loads their own file.
+`references/DATA_VERSION.json` records where each file came from. Both bundled
+files are read from a standard S/4HANA 2025 system (`S4CORE 109 SP1`) with add-on
+and customer fields removed. Other releases can have other fields and other
+successors; the user's own file settles that.
 
 ## Use the user's own system
 

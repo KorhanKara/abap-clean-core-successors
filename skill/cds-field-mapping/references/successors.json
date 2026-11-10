@@ -9,6 +9,22 @@
   },
   {
     "objectType": "BADI_DEF",
+    "objectName": "CIT_CHG_CLSFCTN_BEFORE_SAVE",
+    "objectState": "DEPRECATED",
+    "successorType": "BADI_DEF",
+    "successorName": "CIT_MODIFY_CLFN_BEFORE_SAVE",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "BADI_DEF",
+    "objectName": "CIT_GET_REPORTING_DATE",
+    "objectState": "DEPRECATED",
+    "successorType": "BADI_DEF",
+    "successorName": "CIT_MODIFY_REPORTING_DATE",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "BADI_DEF",
     "objectName": "ES_SRF_TAX_CALENDAR",
     "objectState": "DEPRECATED",
     "successorType": "BADI_DEF",
@@ -21,6 +37,14 @@
     "objectState": "DEPRECATED",
     "successorType": "BADI_DEF",
     "successorName": "FIWTJP_VALIDATE_MY_NUMBER",
+    "abapCloud": "Released"
+  },
+  {
+    "objectType": "BADI_DEF",
+    "objectName": "HANDLING_UNIT_HEADER",
+    "objectState": "DEPRECATED",
+    "successorType": "BADI_DEF",
+    "successorName": "BADI_LOHUM_ASN_IN_CHANGE_HU",
     "abapCloud": "Released"
   },
   {
@@ -137,6 +161,22 @@
   },
   {
     "objectType": "BADI_DEF",
+    "objectName": "MM_PUR_S4_CCTR_FIELDCONTROLS",
+    "objectState": "DEPRECATED",
+    "successorType": "BADI_DEF",
+    "successorName": "MM_PUR_S4_CCTR_FLDCTRL_SIMPLE",
+    "abapCloud": "Released"
+  },
+  {
+    "objectType": "BADI_DEF",
+    "objectName": "MM_PUR_S4_CCTR_MOD_DISTR_CTR",
+    "objectState": "DEPRECATED",
+    "successorType": "BADI_DEF",
+    "successorName": "MM_PUR_S4_CCTR_MOD_DISTR_OA",
+    "abapCloud": "Released"
+  },
+  {
+    "objectType": "BADI_DEF",
     "objectName": "MM_PUR_S4_CQTN_SOAP_API",
     "objectState": "NOT_TO_BE_RELEASED",
     "successorType": "BADI_DEF",
@@ -157,6 +197,14 @@
     "objectState": "NOT_TO_BE_RELEASED",
     "successorType": "BADI_DEF",
     "successorName": "BADI_QQM_NOTIF_EVENT_POST_CLD",
+    "abapCloud": "Released"
+  },
+  {
+    "objectType": "BADI_DEF",
+    "objectName": "SRF_QUERY_EXECUTION",
+    "objectState": "DEPRECATED",
+    "successorType": "BADI_DEF",
+    "successorName": "SRF_QUERY_EXECUTION_V2",
     "abapCloud": "Released"
   },
   {
@@ -457,6 +505,54 @@
   },
   {
     "objectType": "CLAS",
+    "objectName": "/CPD/CL_SC_BADI_UTILITY",
+    "objectState": "DEPRECATED",
+    "successorType": "CLAS",
+    "successorName": "/CPD/CL_SC_BADI_UTILITY_1",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "CLAS",
+    "objectName": "CL_ABAP_CODEPAGE",
+    "objectState": "DEPRECATED",
+    "successorType": "CLAS",
+    "successorName": "CL_ABAP_CONV_CODEPAGE",
+    "abapCloud": "Released"
+  },
+  {
+    "objectType": "CLAS",
+    "objectName": "CL_ABAP_CONV_IN_CE",
+    "objectState": "DEPRECATED",
+    "successorType": "CLAS",
+    "successorName": "CL_ABAP_CONV_CODEPAGE",
+    "abapCloud": "Released"
+  },
+  {
+    "objectType": "CLAS",
+    "objectName": "CL_ABAP_CONV_OUT_CE",
+    "objectState": "DEPRECATED",
+    "successorType": "CLAS",
+    "successorName": "CL_ABAP_CONV_CODEPAGE",
+    "abapCloud": "Released"
+  },
+  {
+    "objectType": "CLAS",
+    "objectName": "CL_ABAP_CONV_X2X_CE",
+    "objectState": "DEPRECATED",
+    "successorType": "CLAS",
+    "successorName": "CL_ABAP_CONV_CODEPAGE",
+    "abapCloud": "Released"
+  },
+  {
+    "objectType": "CLAS",
+    "objectName": "CL_ABAP_VIEW_OFFLEN",
+    "objectState": "DEPRECATED",
+    "successorType": "CLAS",
+    "successorName": "CL_ABAP_CONV_CODEPAGE",
+    "abapCloud": "Released"
+  },
+  {
+    "objectType": "CLAS",
     "objectName": "CL_AUNIT_ASSERT",
     "objectState": "DEPRECATED",
     "successorType": "CLAS",
@@ -689,6 +785,262 @@
   },
   {
     "objectType": "DDLS",
+    "objectName": "C_BUEVLGEVTFULLPAYLOADJSONDEX",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "C_BUEVLGEVTFULLPYLDJSONDEX_2",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "C_BUSEVTLOGEVENTDEX",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "C_BUSEVTLOGEVENTDEX_2",
+    "abapCloud": "Not released"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "C_BUSEVTLOGEVENTDEX_2",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "C_BUSEVTLOGEVENTDEX_3",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "C_BUSEVTLOGPAYLOADDEX",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "C_BUSEVTLOGPAYLOADDEX_2",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "C_CUSTOMERRETURNITEMQRY",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "C_CUSTOMERRETURNITEMQRY_2",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "C_ENGMNTPROJECTIDGENERATE",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_ENGAGEMENTPROJECT",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "C_ENGMNTPROJFCSTQUERY",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "C_ENGMNTPROJFCSTQUERY_2",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "C_EWM_INBDELIVITEMLEANQ",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "C_EWM_INBDELIVITEMLEANQ_2",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "C_EWM_INBOUNDDELIVERYITEMQ",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "C_EWM_INBDELIVITEMQ_2",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "C_EWM_OUTBDELIVORDLEANQ",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "C_EWM_OUTBDELIVORDLEANQ_2",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "C_EWM_OUTBDELIVORDNODATEQ",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "C_EWM_ODONODATEQ_2",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "C_EWM_OUTBDELIVORDNOPARAMQ",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "C_EWM_ODONOPARAMQ_2",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "C_EWM_OUTBDELIVORDQ",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "C_EWM_OUTBDELIVORDQ_2",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "C_EWM_WAREHOUSEORDERLEANQ",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "C_EWM_WHSEORDERLEANQ_2",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "C_EWM_WAREHOUSEORDERQ",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "C_EWM_WAREHOUSEORDERQ_2",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "C_EWM_WAREHOUSETASKLEANQ",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "C_EWM_WAREHOUSETASKLEANQ_2",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "C_EWM_WAREHOUSETASKQ",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "C_EWM_WAREHOUSETASKQ_2",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "C_EWM_WAREHOUSEWAVEQ",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "C_EWM_WAREHOUSEWAVEQ_2",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "C_FIXEDASSETBALANCE",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "C_ASSETBALANCE",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "C_FIXEDASSETHISTORYSHEET",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "C_ASSETHISTORYSHEET",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "C_INSURCLMOUTSTDGRESERVEQ",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "C_INSURCLMOUTSTDGRESERVEQ_2",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "C_MFGORDACTLPLANTGTCOSTQRY",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "C_MFGORDACTLPLNTGTLDGRCOST",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "C_PRELIMBILLGDOCITMWRKFLWINBOX",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_BILLINGDOCUMENTITEMBASIC",
+    "abapCloud": "Released"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "C_PRELIMBILLGDOCWRKFLWINBOX",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_BILLINGDOCUMENTBASIC",
+    "abapCloud": "Released"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "C_RAOPENREVENUEPERPERIODQUERY",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "C_RAOPENREVENUEPERPERIODQRY_2",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "C_RAPOSTINGITEMQUERY",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "C_RAPOSTINGITEMQUERY_2",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "C_RAYRTODTERECGDREVNQUERY",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "C_RAYRTODTERECGDREVNQUERY_2",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "C_RDPBATCHDEX",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "C_RDPBATCHCLASSIFICATIONDEX",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "C_RDPDELIVERYDOCUMENTDEX",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "C_SUSTDELIVERYDOCUMENTDEX",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "C_RDPDELIVERYDOCUMENTITEMDEX",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "C_SUSTDELIVERYDOCUMENTITEMDEX",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "C_RDPGOODSMOVEMENTDOCUMENTDEX",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "C_SUSTGOODSMOVEMENTDOCUMENTDEX",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "C_RECONTRACTASSIGNSUBJECTQ",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "C_RECONTRACTASSIGNSUBJECTQ_2",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
     "objectName": "C_SALESDOCITMPRCGELMNTDEX",
     "objectState": "DEPRECATED",
     "successorType": "DDLS",
@@ -713,10 +1065,34 @@
   },
   {
     "objectType": "DDLS",
+    "objectName": "C_SFTYDATASHTOUTPREQFDP",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "C_SFTYDATASHTOUTPREQFDP_2",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "C_WORKPACKAGEWORKITEMVH",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_WORKPACKAGEWORKITEM",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
     "objectName": "I_APISFORSAPCLOUDPLATFORM",
     "objectState": "DEPRECATED",
     "successorType": "DDLS",
     "successorName": "I_APISFORCLOUDDEVELOPMENT",
+    "abapCloud": "Released"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_BILLINGDOCEXTDITEMBASIC",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_BILLINGDOCUMENTITEMBASIC",
     "abapCloud": "Released"
   },
   {
@@ -733,6 +1109,54 @@
     "objectState": "DEPRECATED",
     "successorType": "DDLS",
     "successorName": "I_MATLBILLOFMATERIALITEMDEX",
+    "abapCloud": "Released"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_BR_NFVEHICLETYPE",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_BR_NFVEHICLETYPE_2",
+    "abapCloud": "Released"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_BR_NFVEHICLETYPETEXT",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_BR_NFVEHICLETYPETEXT_2",
+    "abapCloud": "Released"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_BR_VEHICLEFUELTYPE",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_BR_VEHICLEFUELTYPE_2",
+    "abapCloud": "Released"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_BR_VEHICLEFUELTYPETEXT",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_BR_VEHICLEFUELTYPETEXT_2",
+    "abapCloud": "Released"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_BR_VEHICLEUSAGE",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_BR_VEHICLEUSAGE_2",
+    "abapCloud": "Released"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_BR_VEHICLEUSAGETEXT",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_BR_VEHICLEUSAGETEXT_2",
     "abapCloud": "Released"
   },
   {
@@ -841,18 +1265,18 @@
   },
   {
     "objectType": "DDLS",
-    "objectName": "I_CLFNOBJECTCHARCVALUEDEX",
+    "objectName": "I_CNSLDTNAPPORTIONMENTT",
     "objectState": "DEPRECATED",
     "successorType": "DDLS",
-    "successorName": "I_CLFNOBJECTCHARCVALUEDEX_2",
+    "successorName": "I_CNSLDTNAPPORTIONMENTTEXT_2",
     "abapCloud": "Released"
   },
   {
     "objectType": "DDLS",
-    "objectName": "I_CLFNOBJECTCLASSDEX",
+    "objectName": "I_CNSLDTNCRCYCNVRSNDIFFTYPET",
     "objectState": "DEPRECATED",
     "successorType": "DDLS",
-    "successorName": "I_CLFNOBJECTCLASSDEX_2",
+    "successorName": "I_CNSLDTNCRCYCNVRSNDIFFTYPET_2",
     "abapCloud": "Released"
   },
   {
@@ -861,6 +1285,30 @@
     "objectState": "DEPRECATED",
     "successorType": "DDLS",
     "successorName": "I_CNSLDTNPOSTINGLEVELTEXT_2",
+    "abapCloud": "Released"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_CNSLDTNREPORTINGLEVELT",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_CNSLDTNREPORTINGLEVELTEXT_2",
+    "abapCloud": "Released"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_CO2EQFPRNTAVGRLTVBASEUOM",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_CO2EQFPRNTAVGRLTVBASEUOM_2",
+    "abapCloud": "Released"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_CO2EQSUPLRFPRNTAVGBASEUOM",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_CO2EQSUPLRFPRNTAVGBASEUOM_2",
     "abapCloud": "Released"
   },
   {
@@ -881,6 +1329,22 @@
   },
   {
     "objectType": "DDLS",
+    "objectName": "I_CUSTOMERMATERIAL",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_CUSTOMERMATERIAL_2",
+    "abapCloud": "Released"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_CUSTOMERRETURNITEMCUBE",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_CUSTOMERRETURNITEMCUBE_2",
+    "abapCloud": "Released"
+  },
+  {
+    "objectType": "DDLS",
     "objectName": "I_DEVPROJRESPONSIBLE",
     "objectState": "DEPRECATED",
     "successorType": "DDLS",
@@ -897,11 +1361,67 @@
   },
   {
     "objectType": "DDLS",
+    "objectName": "I_ENGMNTPROJFCSTCUBE",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_ENGMNTPROJFCSTCUBE_2",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_EWM_ACTIVITYAREA",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_EWM_ACTIVITYAREA_2",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_EWM_ACTIVITYAREATEXT",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_EWM_ACTIVITYAREATEXT_2",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
     "objectName": "I_EWM_DELIVERYCATEGORY",
     "objectState": "DEPRECATED",
     "successorType": "DDLS",
     "successorName": "I_EWM_DELIVERYCATEGORY_2",
     "abapCloud": "Released"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_EWM_DELIVERYITEMCATEGORY",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_EWM_DELIVERYITEMCATEGORY_2",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_EWM_DELIVERYITEMCATEGORYTEXT",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_EWM_DELIVERYITEMCATTEXT_2",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_EWM_DELIVERYITEMTYPE",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_EWM_DELIVERYITEMTYPE_2",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_EWM_DELIVERYITEMTYPETEXT",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_EWM_DELIVERYITEMTYPETEXT_2",
+    "abapCloud": "Key user only"
   },
   {
     "objectType": "DDLS",
@@ -921,6 +1441,38 @@
   },
   {
     "objectType": "DDLS",
+    "objectName": "I_EWM_EXCEPTIONCODE",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_EWM_EXCEPTIONCODE_2",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_EWM_EXCEPTIONCODETEXT",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_EWM_EXCEPTIONCODETEXT_2",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_EWM_EXECUTIONRESOURCE",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_EWM_EXECUTIONRESOURCE_2",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_EWM_INBOUNDDELIVERYITEMC",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_EWM_INBDELIVERYITEMC_2",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
     "objectName": "I_EWM_INBOUNDDELIVERYTYPE",
     "objectState": "DEPRECATED",
     "successorType": "DDLS",
@@ -929,11 +1481,283 @@
   },
   {
     "objectType": "DDLS",
+    "objectName": "I_EWM_MNSOFTRANSPTTYPETEXT",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_EWM_MNSOFTRANSPTTYPETEXT_2",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_EWM_MNSOFTRANSPTYPE",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_EWM_MNSOFTRANSPTYPE_2",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_EWM_OUTBDELIVORDC",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_EWM_OUTBDELIVORDC_2",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_EWM_OUTBDELIVORDNOPARAMC",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_EWM_ODONOPARAMC_2",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
     "objectName": "I_EWM_OUTBOUNDDELIVORDERTYPE",
     "objectState": "DEPRECATED",
     "successorType": "DDLS",
     "successorName": "I_EWM_OUTBOUNDDELIVORDERTYPE_2",
     "abapCloud": "Released"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_EWM_RESOURCEGROUP",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_EWM_RESOURCEGROUP_2",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_EWM_RESOURCEGROUPTEXT",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_EWM_RESOURCEGROUPTEXT_2",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_EWM_RESOURCETYPE",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_EWM_RESOURCETYPE_2",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_EWM_RESOURCETYPETEXT",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_EWM_RESOURCETYPETEXT_2",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_EWM_STOCKTYPE",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_EWM_STOCKTYPE_2",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_EWM_STOCKTYPETEXT",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_EWM_STOCKTYPETEXT_2",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_EWM_STORAGEBINTYPE",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_EWM_STORAGEBINTYPE_2",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_EWM_STORAGEBINTYPETEXT",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_EWM_STORAGETYPETEXT_2",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_EWM_STORAGEPROCESS",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_EWM_STORAGEPROCESS_2",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_EWM_STORAGEPROCESSTEXT",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_EWM_STORAGEPROCESSTEXT_2",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_EWM_STORAGESECTION",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_EWM_STORAGESECTION_2",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_EWM_STORAGESECTIONTEXT",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_EWM_STORAGESECTIONTEXT_2",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_EWM_STORAGETYPE",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_EWM_STORAGETYPE_2",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_EWM_STORAGETYPETEXT",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_EWM_STORAGETYPETEXT_2",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_EWM_WAREHOUSEACTIVITY",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_EWM_WAREHOUSEACTIVITY_2",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_EWM_WAREHOUSEACTIVITYTEXT",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_EWM_WAREHOUSEACTIVITYTEXT_2",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_EWM_WAREHOUSENUMBER",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_EWM_WAREHOUSENUMBER_2",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_EWM_WAREHOUSENUMBERTEXT",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_EWM_WAREHOUSENUMBERTEXT_2",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_EWM_WAREHOUSEORDERQUEUE",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_EWM_WAREHOUSEORDERQUEUE_2",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_EWM_WAREHOUSEORDERQUEUETEXT",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_EWM_WHSEORDERQUEUETEXT_2",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_EWM_WAREHOUSETASK",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_EWM_WAREHOUSETASK_2",
+    "abapCloud": "Released"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_EWM_WAREHOUSEWAVEC",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_EWM_WAREHOUSEWAVEC_2",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_EWM_WAVECATEGORY",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_EWM_WAVECATEGORY_2",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_EWM_WAVETYPE",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_EWM_WAVETYPE_2",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_EWM_WHSEORDERCTNRULE",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_EWM_WHSEORDERCTNRULE_2",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_EWM_WHSEORDERCTNRULETEXT",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_EWM_WHSEORDERCTNRULETEXT_2",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_EWM_WHSEORDERCUBE",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_EWM_WHSEORDERCUBE_2",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_EWM_WHSETASKITEMCUBE",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_EWM_WHSETASKITEMCUBE_2",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_EWM_WRHSPROCTYPE",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_EWM_WRHSPROCTYPE_2",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_EWM_WRHSPROCTYPETEXT",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_EWM_WRHSPROCTYPETEXT_2",
+    "abapCloud": "Key user only"
   },
   {
     "objectType": "DDLS",
@@ -953,11 +1777,75 @@
   },
   {
     "objectType": "DDLS",
-    "objectName": "I_INSURPLCYPLNDDTEPROCESSINGTP",
+    "objectName": "I_FIXEDASSETAHSVALUECUBE",
     "objectState": "DEPRECATED",
     "successorType": "DDLS",
-    "successorName": "I_INSURPLCYPLNDDTEPROCGTP_2",
-    "abapCloud": "Released"
+    "successorName": "I_ASSETHISTORYSHEETCUBE",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_FIXEDASSETVALUECUBE",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_ASSETBALANCECUBE",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_INSURANCEOBJECTDATA",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_COLLATERALINSURANCE",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_INSURANCEOBJECTFREQUENCYUNIT",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_COLLTRLINSURFREQUENCYUNIT",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_INSURANCEOBJECTMASTERDATA",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_COLLATERALINSURANCE",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_INSURANCEOBJECTTYPE",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_COLLATERALINSURANCETYPE",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_INSURANCEOBJECTTYPETEXT",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_COLLATERALINSURANCETYPETEXT",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_INSURANCEOBJFREQUENCYUNITTXT",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_COLLTRLINSURFRQCYUNITTEXT",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_INSURANCEPERSONSPECIFICATION",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_COLLTRLINSURPERSNSPEC",
+    "abapCloud": "Key user only"
   },
   {
     "objectType": "DDLS",
@@ -977,10 +1865,106 @@
   },
   {
     "objectType": "DDLS",
+    "objectName": "I_LOANCONTRACTLDOCHDR",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_LOANCONTRACTLDOCHDRDATA",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_LOANCONTRACTLDOCITM",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_LOANCONTRACTLDOCITMDATA",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_LOANCONTRBP",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_LOANCONTRDATA",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_LOANCONTRBUSPARTRELSHP",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_LOANCONTRBUSPARTRELSHPDATA",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_LOANCONTRCHGPOINTER",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_LOANCONTRCHGPOINTERDATA",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_LOANCONTRCNDNHDR",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_LOANCONTRCNDNHDRDATA",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_LOANCONTRPLNDITM",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_LOANCONTRPLNDITMDATA",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_MAINTENANCEITEMDATA",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "C_MAINTENANCEITEMDEX",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_MAINTENANCEPLANDATA",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "C_MAINTENANCEPLANDEX",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
     "objectName": "I_MFGORDERACTLPLANTGTCOST",
     "objectState": "DEPRECATED",
     "successorType": "DDLS",
     "successorName": "I_MFGORDERACTLPLANTGTLDGRCOST",
+    "abapCloud": "Released"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_OVRLPRELIMBILLGDOCSTATUS",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_PRELIMBILLGDOCSTATUS",
+    "abapCloud": "Released"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_OVRLPRELIMBILLGDOCSTATUSTEXT",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_PRELIMBILLGDOCSTATUSTEXT",
+    "abapCloud": "Released"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_PERSONWORKAGREEMENT",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_PERSONWORKAGREEMENT_1",
     "abapCloud": "Released"
   },
   {
@@ -1017,10 +2001,322 @@
   },
   {
     "objectType": "DDLS",
+    "objectName": "I_PRODUCTSTRUCTURENODE",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_PRODUCTSTRUCTURENODE_2",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_PRODUCTSTRUCTUREVARIANT",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_PRODUCTSTRUCTUREVARIANT_2",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
     "objectName": "I_PRODUCTUNITOFMEASURETEXT",
     "objectState": "NOT_TO_BE_RELEASED",
     "successorType": "DDLS",
     "successorName": "I_PRODUNITOFMEASURETEXTBASIC",
+    "abapCloud": "Released"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_PROFITABILITYANALYSISDOC",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_JOURNALENTRYITEM",
+    "abapCloud": "Released"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_PURCHASEREQUISITION_API01",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_PURCHASEREQUISITIONITEMAPI01",
+    "abapCloud": "Released"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_PURREQNACCTASSGMT_API01",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_PURREQNACCTASSGMTAPI01",
+    "abapCloud": "Released"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_RADEFRLITEMFORDSPCRCYCUBE",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_RADEFRLITEMFORDSPCRCYCUBE_2",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_RAOPENREVENUEPERPERIODCUBE",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_RAOPENREVENUEPERPERIODCUBE_2",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_RAPOSTINGITEMCUBE",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_RAPOSTINGITEMCUBE_2",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_REALESTATEBASEMEASURE",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_COLLTRLREBASEMEASURE",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_REALESTATEBASEMEASURETEXT",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_COLLTRLREBASEMEASURETEXT",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_REALESTATEBASEPERIOD",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_COLLTRLREBASEPERIOD",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_REALESTATEBASEPERIODTEXT",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_COLLTRLREBASEPERIODTEXT",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_REALESTATEFIXTUREFITTINGTYPE",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_COLLTRLREFIXTUREFITTINGTYPE",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_REALESTATEOBJECTDATA",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_COLLATERALREALESTATE",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_REALESTATEOBJECTMASTERDATA",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_COLLATERALREALESTATEMASTER",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_REALESTATEOBJECTPRT",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_COLLATERALREALESTATEPART",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_REALESTATEOBJECTUSAGE",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_COLLTRLREUSAGETYPE",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_REALESTATEOBJECTUSAGETEXT",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_COLLTRLREUSAGETYPETEXT",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_REALESTATEOBJPRTMSTRDATA",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_COLLTRLREPARTMASTER",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_REALESTATEPRTACCESSORY",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_COLLTRLREPARTACCESSORY",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_REALESTATEPRTACCSRYMSTRDATA",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_COLLTRLREPARTACCESSORYMASTER",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_REALESTATEPRTCOST",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_COLLATERALREALESTATEPARTCOST",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_REALESTATEPRTLANDREGFINDATA",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_COLLTRLRELANDREGFINDATA",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_REALESTATEPRTLANDREGHDR",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_COLLTRLRELANDREGISTERHEADER",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_REALESTATEPRTLANDREGISTER",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_COLLTRLRELANDREGISTER",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_REALESTATEPRTLANDREGTYPE",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_COLLATERALLANDREGISTERTYPE",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_REALESTATEPRTLANDREGTYPETEXT",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_COLLTRLLANDREGISTERTYPETEXT",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_REALESTATEPRTPARTNER",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_COLLTRLREPARTPARTNER",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_REALESTATEPRTUTILIZATION",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_COLLTRLREUTILIZATION",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_REALESTATEPRTUTILIZATIONTEXT",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_COLLTRLREUTILIZATIONTEXT",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_REALESTATEPRTVALUE",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_COLLTRLREPARTVALUE",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_REALESTATEVALUATIONFRQCY",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_COLLTRLREVALUATIONFREQUENCY",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_REALESTATEVALUATIONFRQCYTEXT",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_COLLTRLREVALNFREQUENCYTEXT",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_REALESTATEVALUATIONRESULT",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_COLLTRLREVALUATIONRESULT",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_REALESTATEVALUATIONRESULTTXT",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_COLLTRLREVALUATIONRESULTTEXT",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_REALESTTEFXTREFITTINGTYPETXT",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_COLLTRLREFXTREFTTGTYPETEXT",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_REALESTTEPRTLANDREGPRPTYLIST",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_COLLTRLRELANDREGPROPERTYLIST",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_RECONTRACTASSIGNSUBJECT",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_RECONTRACTASSIGNSUBJECTC_2",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_SALESQUOTATIONITEMCUBE",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_SALESQUOTATIONITEMCUBE_2",
     "abapCloud": "Released"
   },
   {
@@ -1033,10 +2329,42 @@
   },
   {
     "objectType": "DDLS",
+    "objectName": "I_SERVICECONTRACTCUBE",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_SERVICECONTRACTCUBE_2",
+    "abapCloud": "Released"
+  },
+  {
+    "objectType": "DDLS",
     "objectName": "I_SERVICECOSTRATE",
     "objectState": "DEPRECATED",
     "successorType": "DDLS",
     "successorName": "I_SERVICECOSTRATE_2",
+    "abapCloud": "Released"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_SERVICEDOCUMENTITEMPRDCSSR",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_SERVICEDOCUMENTITEMPRDCSSR_2",
+    "abapCloud": "Released"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_SERVICEDOCUMENTITEMSUCCESSOR",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_SERVICEDOCUMENTITEMSUCCSSR_2",
+    "abapCloud": "Released"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_SERVICEORDERCUBE",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_SERVICEORDERCUBE_2",
     "abapCloud": "Released"
   },
   {
@@ -1069,6 +2397,54 @@
     "objectState": "DEPRECATED",
     "successorType": "DDLS",
     "successorName": "I_STOCKTYPETEXT_2",
+    "abapCloud": "Released"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_TRANSPORDSTAGEDESTSTOPCAT",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_TRORDSTAGESTOPSUCCESSORCAT",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_TRANSPORDSTAGEDESTSTOPCATT",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_TRORDSTGESTOPSUCCESSORCATT",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_TRDGDOCSUPLRBILLGBLKRSN",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_TRDGDOCADDLEXPNSBLKRSNVH",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_TRDGDOCSUPLRBILLGBLKRSNTEXT",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_TRDGDOCADDLEXPNSBLKRSNTEXT",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_WASTEHZDCHARCDIMN",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_WASTEHAZARDTYPEDIMENSION",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "DDLS",
+    "objectName": "I_WORKFLOWRECIPIENTS",
+    "objectState": "DEPRECATED",
+    "successorType": "DDLS",
+    "successorName": "I_WORKFLOWRECIPIENTS_V2",
     "abapCloud": "Released"
   },
   {
@@ -4689,10 +6065,34 @@
   },
   {
     "objectType": "INTF",
+    "objectName": "IF_CIT_CHG_CLSFCTN_BEFORE_SAVE",
+    "objectState": "DEPRECATED",
+    "successorType": "INTF",
+    "successorName": "IF_CIT_MODIFY_CLFN_BEFORE_SAVE",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "INTF",
+    "objectName": "IF_CIT_GET_REPORTING_DATE",
+    "objectState": "DEPRECATED",
+    "successorType": "INTF",
+    "successorName": "IF_CIT_MODIFY_REPORTING_DATE",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "INTF",
     "objectName": "IF_DOCUMENT_BCS",
     "objectState": "NOT_TO_BE_RELEASED",
     "successorType": "CLAS",
     "successorName": "CL_BCS_MAIL_BODYPART",
+    "abapCloud": "Released"
+  },
+  {
+    "objectType": "INTF",
+    "objectName": "IF_EX_LINES",
+    "objectState": "DEPRECATED",
+    "successorType": "INTF",
+    "successorName": "IF_EX_LINES_CLOUD",
     "abapCloud": "Released"
   },
   {
@@ -5217,6 +6617,14 @@
   },
   {
     "objectType": "TABL",
+    "objectName": "FKKINV_UNIT_PUBLIC_DATA_BADI",
+    "objectState": "DEPRECATED",
+    "successorType": "TABL",
+    "successorName": "FKKINV_UNIT_PUBLIC_DATA_GFN",
+    "abapCloud": "Released"
+  },
+  {
+    "objectType": "TABL",
     "objectName": "FKKVK",
     "objectState": "NOT_TO_BE_RELEASED",
     "successorType": "DDLS",
@@ -5230,6 +6638,110 @@
     "successorType": "DDLS",
     "successorName": "I_CONTRACTACCOUNTPARTNER",
     "abapCloud": "Released"
+  },
+  {
+    "objectType": "TABL",
+    "objectName": "GLO_BUP_CTX_S_ACCDOC_HDR_FI",
+    "objectState": "DEPRECATED",
+    "successorType": "TABL",
+    "successorName": "FINS_ACDOC_HEADER_IN",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "TABL",
+    "objectName": "GLO_BUP_CTX_S_ACCDOC_ITM_FI",
+    "objectState": "DEPRECATED",
+    "successorType": "TABL",
+    "successorName": "FINS_ACDOC_ITEM_IN",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "TABL",
+    "objectName": "GLO_BUP_CTX_S_ACCHD_FI",
+    "objectState": "DEPRECATED",
+    "successorType": "TABL",
+    "successorName": "FINS_ACDOC_HEADER_IN",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "TABL",
+    "objectName": "GLO_BUP_CTX_S_ACCINTF_FI",
+    "objectState": "DEPRECATED",
+    "successorType": "TABL",
+    "successorName": "FINS_ACDOC_HEADER_IN",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "TABL",
+    "objectName": "GLO_BUP_CTX_S_ACCINTF_FI",
+    "objectState": "DEPRECATED",
+    "successorType": "TABL",
+    "successorName": "FINS_ACDOC_ITEM_IN",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "TABL",
+    "objectName": "GLO_BUP_CTX_S_ACCIT_FI",
+    "objectState": "DEPRECATED",
+    "successorType": "TABL",
+    "successorName": "FINS_ACDOC_ITEM_IN",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "TABL",
+    "objectName": "GLO_BUP_CTX_S_FIORI_FI",
+    "objectState": "DEPRECATED",
+    "successorType": "TABL",
+    "successorName": "FINS_ACDOC_HEADER_IN",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "TABL",
+    "objectName": "GLO_BUP_CTX_S_FIORI_FI",
+    "objectState": "DEPRECATED",
+    "successorType": "TABL",
+    "successorName": "FINS_ACDOC_ITEM_IN",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "TABL",
+    "objectName": "GLO_BUP_CTX_S_FIORI_ITEM_FI",
+    "objectState": "DEPRECATED",
+    "successorType": "TABL",
+    "successorName": "FINS_ACDOC_ITEM_IN",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "TABL",
+    "objectName": "GLO_BUP_CTX_S_HEADER_FI",
+    "objectState": "DEPRECATED",
+    "successorType": "TABL",
+    "successorName": "FINS_ACDOC_HEADER_IN",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "TABL",
+    "objectName": "GLO_BUP_CTX_S_ITEM_FI",
+    "objectState": "DEPRECATED",
+    "successorType": "TABL",
+    "successorName": "FINS_ACDOC_ITEM_IN",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "TABL",
+    "objectName": "GLO_BUP_CTX_S_TRANS_FI",
+    "objectState": "DEPRECATED",
+    "successorType": "TABL",
+    "successorName": "FINS_ACDOC_HEADER_IN",
+    "abapCloud": "Key user only"
+  },
+  {
+    "objectType": "TABL",
+    "objectName": "GLO_BUP_CTX_S_TRANS_FI",
+    "objectState": "DEPRECATED",
+    "successorType": "TABL",
+    "successorName": "FINS_ACDOC_ITEM_IN",
+    "abapCloud": "Key user only"
   },
   {
     "objectType": "TABL",
@@ -7181,6 +8693,14 @@
     "objectState": "NOT_TO_BE_RELEASED",
     "successorType": "DDLS",
     "successorName": "I_HANDLINGUNITITEMTP",
+    "abapCloud": "Released"
+  },
+  {
+    "objectType": "TTYP",
+    "objectName": "FKKBIXBIT0_IT_ALL_TAB_BADI",
+    "objectState": "DEPRECATED",
+    "successorType": "TTYP",
+    "successorName": "FKKBIXBIT0_IT_ALL_GFN_TAB",
     "abapCloud": "Released"
   },
   {

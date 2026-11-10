@@ -1,19 +1,18 @@
 {
   "mapping": {
-    "source": "ZCDS_FIELD_MAPPING report, Download JSON",
-    "release": "S4CORE 109 SP01",
-    "generated": "2026-11-04",
+    "source": "Read with ZCDS_FIELD_MAPPING from a standard S/4HANA 2025 system; add-on and customer fields removed.",
+    "release": "S4CORE 109 SP1",
+    "pairsFrom": "this system",
+    "generated": "2026-11-10",
     "views": 294,
     "fields": 10004,
     "mappedFields": 7358,
-    "inExpressionFields": 280,
-    "pairsFrom": "objectReleaseInfo_PCELatest.json (SAP/abap-atc-cr-cv-s4hc)"
+    "inExpressionFields": 280
   },
   "successors": {
-    "source": "objectReleaseInfo_PCELatest.json (SAP/abap-atc-cr-cv-s4hc), commit a1e452e4",
-    "release": "Cloud ERP Private 2025 FPS02",
+    "source": "Read with ZCDS_FIELD_MAPPING from a standard S/4HANA 2025 system; add-on and customer fields removed.",
+    "release": "S4CORE 109 SP1",
     "generated": "2026-11-10",
-    "rows": 900,
-    "note": "SAP's file lists objects released for ABAP Cloud only, so successors released for key user apps only are missing here."
+    "rows": 1090
   }
 }
