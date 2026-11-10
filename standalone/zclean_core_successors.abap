@@ -1285,6 +1285,8 @@ CLASS lcl_report IMPLEMENTATION.
         set_heading( io_columns = lo_columns iv_column = 'ABAP_CLOUD'     iv_text = 'ABAP Cloud' ).
         set_heading( io_columns = lo_columns iv_column = 'TYPE_TEXT'      iv_text = 'Type text' ).
         set_heading( io_columns = lo_columns iv_column = 'SUCC_TYPE_TEXT' iv_text = 'Succ. text' ).
+        CAST cl_salv_column_table( lo_columns->get_column( 'OBJECT_NAME' ) )->set_key( ).
+        CAST cl_salv_column_table( lo_columns->get_column( 'SUCCESSOR_NAME' ) )->set_key( ).
         lo_alv->display( ).
       CATCH cx_salv_error INTO DATA(lx_error).
         MESSAGE lx_error TYPE 'S' DISPLAY LIKE 'E'.
