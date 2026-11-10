@@ -1,6 +1,6 @@
-# ABAP table field to CDS field mapping
+# ABAP clean core successors
 
-Enter a classic table, get the field-level mapping to its released successor CDS views, read from the dictionary of your own system.
+Find the released successor of a classic SAP object, down to the field, read from your own system: which released CDS view field replaces a table field, and what replaces a function module, class, data element, domain or older CDS view. Each successor shows whether it clears the ATC finding "Usage of APIs". It comes as an ABAP report and as an AI agent skill.
 
 SAP's [Cloudification Repository](https://github.com/SAP/abap-atc-cr-cv-s4hc) tells you that `MARA` is replaced by `I_Product`. It does not tell you which `I_Product` field replaces `MARA-MATKL`. That is the question you have on every `SELECT` you migrate to clean core, and this report answers it.
 
@@ -29,14 +29,14 @@ The report does not carry a list of its own on purpose: a built-in list would ho
 
 Two ways, same code:
 
-- **abapGit:** pull this repository into a local or Z package. It creates the report `ZCDS_FIELD_MAPPING` and the class `ZCL_CDS_FIELD_MAPPING`.
-- **Copy and paste:** create an executable report in SE38, for example `ZCDS_FIELD_MAPPING`, paste [standalone/zcds_field_mapping.abap](standalone/zcds_field_mapping.abap) over its source and activate. Everything is in that one source as local classes, selection texts included.
+- **abapGit:** pull this repository into a local or Z package. It creates the report `ZCLEAN_CORE_SUCCESSORS` and the class `ZCL_CLEAN_CORE_SUCCESSORS`.
+- **Copy and paste:** create an executable report in SE38, for example `ZCLEAN_CORE_SUCCESSORS`, paste [standalone/zclean_core_successors.abap](standalone/zclean_core_successors.abap) over its source and activate. Everything is in that one source as local classes, selection texts included.
 
 No other dependency is needed.
 
 ## Use
 
-Run `ZCDS_FIELD_MAPPING` in SE38. Choose **Show on screen** to look something up, or **Download JSON** to get everything in one file.
+Run `ZCLEAN_CORE_SUCCESSORS` in SE38. Choose **Show on screen** to look something up, or **Download JSON** to get everything in one file.
 
 On screen, pick what to look up:
 
@@ -99,11 +99,11 @@ Both modes read SAP's own successor and API state lists in the system (`ARS_W_AP
 
 ## Use with an AI assistant
 
-`skill/cds-field-mapping` is an agent skill that answers the same questions in chat: ask "what do I use instead of `MARA-MATNR`?" or "what replaces `BAPI_PROCORD_GET_DETAIL`?" and it looks the answer up instead of guessing a name. It can also rewrite a simple `SELECT` on a classic table into one on the released view, with every renamed field aliased to its old name.
+`skill/clean-core-successors` is an agent skill that answers the same questions in chat: ask "what do I use instead of `MARA-MATNR`?" or "what replaces `BAPI_PROCORD_GET_DETAIL`?" and it looks the answer up instead of guessing a name. It can also rewrite a simple `SELECT` on a classic table into one on the released view, with every renamed field aliased to its old name.
 
 ### Install the skill
 
-Copy the `skill/cds-field-mapping` folder to wherever your assistant loads skills from, for example `~/.claude/skills/cds-field-mapping` for Claude Code. The scripts need Python 3 and nothing else.
+Copy the `skill/clean-core-successors` folder to wherever your assistant loads skills from, for example `~/.claude/skills/clean-core-successors` for Claude Code. The scripts need Python 3 and nothing else.
 
 ### Data included in the repository
 
@@ -113,12 +113,12 @@ The skill ships with data read from an **S/4HANA 2025 FPS01** system (`S4CORE 10
 
 Your release can have other views, other fields and other successors, and your system has its own extension fields. To make the skill answer for your system:
 
-1. Run `ZCDS_FIELD_MAPPING` in SE38 with **Download JSON**.
-2. The report asks where to save the file. Any folder on your PC works, for example `C:\Users\<you>\Downloads\core-data-services.json`.
+1. Run `ZCLEAN_CORE_SUCCESSORS` in SE38 with **Download JSON**.
+2. The report asks where to save the file. Any folder on your PC works, for example `C:\Users\<you>\Downloads\clean-core-successors.json`.
 3. Load the file into the copy of the skill your assistant uses. With the install path above:
 
    ```bash
-   python3 ~/.claude/skills/cds-field-mapping/scripts/import_mapping.py "C:\Users\<you>\Downloads\core-data-services.json"
+   python3 ~/.claude/skills/clean-core-successors/scripts/import_mapping.py "C:\Users\<you>\Downloads\clean-core-successors.json"
    ```
 
    On Windows, `py -3` works in place of `python3`.
@@ -155,7 +155,7 @@ On releases before S/4HANA 2022 the report does not run, so the skill's bundled 
 
 ## Development
 
-`standalone/zcds_field_mapping.abap` is generated from `src/`. After changing anything in `src/`, run `python tools/build_standalone.py` so the two stay the same.
+`standalone/zclean_core_successors.abap` is generated from `src/`. After changing anything in `src/`, run `python tools/build_standalone.py` so the two stay the same.
 
 ## License
 

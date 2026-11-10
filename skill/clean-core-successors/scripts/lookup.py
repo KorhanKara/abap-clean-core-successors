@@ -5,21 +5,21 @@ ABAP SELECT rewriter.
 
 Data source: references/core-data-services.json — cdsName/tableName/released
 plus per-field cdsField<->tableField pairs, read from an SAP system with the
-ZCDS_FIELD_MAPPING report (release recorded in references/DATA_VERSION.json).
+ZCLEAN_CORE_SUCCESSORS report (release recorded in references/DATA_VERSION.json).
 Fields computed in the view (CASE, literals, arithmetic, substrings) carry an
-empty tableField. Output of the ZCDS_FIELD_MAPPING report also lists the columns
+empty tableField. Output of the ZCLEAN_CORE_SUCCESSORS report also lists the columns
 such a field reads, one row per column with computed=true: those rows are never
 offered as a replacement. Verify non-trivial rewrites, see caveats in --help.
 
 Usage:
     # Which released CDS view(s) exist for a classic table, and what's the field mapping?
-    python3 cds_field_mapping.py --table MARA
+    python3 lookup.py --table MARA
 
     # Which classic table+field does a CDS view+field come from?
-    python3 cds_field_mapping.py --cds I_PRODUCT --field Product
+    python3 lookup.py --cds I_PRODUCT --field Product
 
     # Best-effort rewrite of a simple classic SELECT into a CDS-based one
-    python3 cds_field_mapping.py --rewrite "SELECT SINGLE matnr FROM mara INTO @DATA(lv_matnr)."
+    python3 lookup.py --rewrite "SELECT SINGLE matnr FROM mara INTO @DATA(lv_matnr)."
 
 Only entities with released=true are used for rewrite suggestions by
 default (pass --allow-unreleased to also consider not-yet-released CDS

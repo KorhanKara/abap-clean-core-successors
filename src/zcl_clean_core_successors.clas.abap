@@ -1,4 +1,4 @@
-CLASS zcl_cds_field_mapping DEFINITION
+CLASS zcl_clean_core_successors DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
 
@@ -169,7 +169,7 @@ CLASS zcl_cds_field_mapping DEFINITION
 ENDCLASS.
 
 
-CLASS zcl_cds_field_mapping IMPLEMENTATION.
+CLASS zcl_clean_core_successors IMPLEMENTATION.
   METHOD extract.
     LOOP AT it_pairs INTO DATA(ls_pair).
       DATA(lv_cds) = to_upper( ls_pair-cds_name ).

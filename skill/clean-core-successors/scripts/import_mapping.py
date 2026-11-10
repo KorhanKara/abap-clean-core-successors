@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """
-Install a file downloaded from the ZCDS_FIELD_MAPPING report (Download JSON) as
+Install a file downloaded from the ZCLEAN_CORE_SUCCESSORS report (Download JSON) as
 this skill's data.
 
 Usage:
-    python3 import_mapping.py core-data-services.json [--release "S4CORE 109 SP01"]
+    python3 import_mapping.py clean-core-successors.json [--release "S4CORE 109 SP01"]
 
 The file holds the table field mapping ("tables") and the successor list
 ("successors"). They are written to references/core-data-services.json and
@@ -33,7 +33,7 @@ def load_export(path):
         return {"tables": data, "successors": None, "release": None, "pairsFrom": None}
     if isinstance(data, dict) and isinstance(data.get("tables"), list):
         return data
-    sys.exit("expected the JSON file written by ZCDS_FIELD_MAPPING")
+    sys.exit("expected the JSON file written by ZCLEAN_CORE_SUCCESSORS")
 
 
 def check_tables(views):
@@ -72,7 +72,7 @@ def summarize(views):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("file", help="JSON file written by ZCDS_FIELD_MAPPING with Download JSON")
+    parser.add_argument("file", help="JSON file written by ZCLEAN_CORE_SUCCESSORS with Download JSON")
     parser.add_argument("--release", help="label for the data; default: the release stored in the file")
     args = parser.parse_args()
 
@@ -90,7 +90,7 @@ def main():
 
     write_json(MAPPING_FILE, export["tables"])
     summary = summarize(export["tables"])
-    version["mapping"] = {"source": "ZCDS_FIELD_MAPPING report, Download JSON",
+    version["mapping"] = {"source": "ZCLEAN_CORE_SUCCESSORS report, Download JSON",
                           "release": (args.release or export.get("release") or "").strip() or "user's own system",
                           "pairsFrom": export.get("pairsFrom") or "unknown",
                           "generated": datetime.date.today().isoformat(),
@@ -98,7 +98,7 @@ def main():
 
     if successors:
         write_json(SUCCESSOR_FILE, successors)
-        version["successors"] = {"source": "ZCDS_FIELD_MAPPING report, Download JSON",
+        version["successors"] = {"source": "ZCLEAN_CORE_SUCCESSORS report, Download JSON",
                                  "release": version["mapping"]["release"],
                                  "generated": version["mapping"]["generated"],
                                  "rows": len(successors)}

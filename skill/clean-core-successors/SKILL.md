@@ -1,13 +1,15 @@
 ---
-name: cds-field-mapping
-description: Answer which released CDS view field replaces a classic SAP table field (MARA-MATNR to I_PRODUCT-Product), what replaces another SAP object such as a function module, class or old CDS view, and rewrite simple SELECTs from a classic table to a released CDS view, from data read out of a real SAP system. Use whenever the user asks what to use instead of a table, table field, function module, BAPI, class or data element, which CDS view replaces a table, how to migrate a SELECT to a released API or clean core, or shares a SELECT on a classic table. Also use to load the user's own file downloaded from the ZCDS_FIELD_MAPPING report.
+name: clean-core-successors
+description: Answer which released CDS view field replaces a classic SAP table field (MARA-MATNR to I_PRODUCT-Product), what replaces another SAP object such as a function module, class or old CDS view, and rewrite simple SELECTs from a classic table to a released CDS view, from data read out of a real SAP system. Use whenever the user asks what to use instead of a table, table field, function module, BAPI, class or data element, which CDS view replaces a table, how to migrate a SELECT to a released API or clean core, or shares a SELECT on a classic table. Also use to load the user's own file downloaded from the ZCLEAN_CORE_SUCCESSORS report.
 ---
 
-# CDS field mapping
+# Clean core successors
 
-The user wants to stop reading a classic table and read a released CDS view
-instead. SAP publishes which view replaces which table. This skill answers the
-part SAP does not publish: which view field replaces which table field.
+The user wants to replace a classic SAP object with a released one: a table with
+a released CDS view, a function module, class or data element with its released
+successor. SAP publishes which object replaces which. This skill adds what SAP
+does not publish, which view field replaces which table field, and whether a
+successor really clears the ATC finding.
 
 Answer from the data, never from memory. CDS field names look guessable and are
 not: `MARA-MATKL` is `ProductGroup`, not `MaterialGroup`.
@@ -17,12 +19,12 @@ not: `MARA-MATKL` is `ProductGroup`, not `MaterialGroup`.
 Run the scripts from this skill's folder. Use `python3`, or `py -3` on Windows.
 
 ```bash
-python3 scripts/cds_field_mapping.py --table MARA --field MATNR   # which view field replaces this field
-python3 scripts/cds_field_mapping.py --table MARA                 # all views and their full mapping
-python3 scripts/cds_field_mapping.py --cds I_PRODUCT --field ProductGroup   # where a view field comes from
-python3 scripts/cds_field_mapping.py --rewrite "SELECT SINGLE matnr matkl FROM mara INTO @DATA(ls_mara) WHERE matnr = @lv_matnr."
-python3 scripts/cds_field_mapping.py --object BAPI_PROCORD_GET_DETAIL   # successor of any object, * as wildcard
-python3 scripts/cds_field_mapping.py --object I_STOCK* --type DDLS
+python3 scripts/lookup.py --table MARA --field MATNR   # which view field replaces this field
+python3 scripts/lookup.py --table MARA                 # all views and their full mapping
+python3 scripts/lookup.py --cds I_PRODUCT --field ProductGroup   # where a view field comes from
+python3 scripts/lookup.py --rewrite "SELECT SINGLE matnr matkl FROM mara INTO @DATA(ls_mara) WHERE matnr = @lv_matnr."
+python3 scripts/lookup.py --object BAPI_PROCORD_GET_DETAIL   # successor of any object, * as wildcard
+python3 scripts/lookup.py --object I_STOCK* --type DDLS
 ```
 
 Not-released views are skipped. Add `--allow-unreleased` only to explain why a
@@ -87,8 +89,8 @@ successors; the user's own file settles that.
 When the user's release differs, or they want their own extension fields, they
 can load their own data:
 
-1. Install the `ZCDS_FIELD_MAPPING` report from this repository, with abapGit or
-   by pasting `standalone/zcds_field_mapping.abap` into a new report.
+1. Install the `ZCLEAN_CORE_SUCCESSORS` report from this repository, with abapGit or
+   by pasting `standalone/zclean_core_successors.abap` into a new report.
 2. Run it with **Download JSON**. The report asks where to save the file; any
    folder works.
 3. Run `python3 scripts/import_mapping.py <path to the file>` from this skill's

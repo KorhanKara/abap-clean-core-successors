@@ -3,7 +3,7 @@
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
    <PROGDIR>
-    <NAME>ZCDS_FIELD_MAPPING</NAME>
+    <NAME>ZCLEAN_CORE_SUCCESSORS</NAME>
     <SUBC>1</SUBC>
     <RLOAD>E</RLOAD>
     <FIXPT>X</FIXPT>
@@ -12,8 +12,8 @@
    <TPOOL>
     <item>
      <ID>R</ID>
-     <ENTRY>Table field to CDS field mapping</ENTRY>
-     <LENGTH>32</LENGTH>
+     <ENTRY>Released successors for clean core</ENTRY>
+     <LENGTH>34</LENGTH>
     </item>
     <item>
      <ID>S</ID>

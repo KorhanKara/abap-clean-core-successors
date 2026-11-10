@@ -1,6 +1,6 @@
 {
   "mapping": {
-    "source": "Read with ZCDS_FIELD_MAPPING from a standard S/4HANA 2025 system; add-on and customer fields removed.",
+    "source": "Read with ZCLEAN_CORE_SUCCESSORS from a standard S/4HANA 2025 system; add-on and customer fields removed.",
     "release": "S4CORE 109 SP1",
     "pairsFrom": "this system",
     "generated": "2026-11-10",
@@ -10,7 +10,7 @@
     "inExpressionFields": 280
   },
   "successors": {
-    "source": "Read with ZCDS_FIELD_MAPPING from a standard S/4HANA 2025 system; add-on and customer fields removed.",
+    "source": "Read with ZCLEAN_CORE_SUCCESSORS from a standard S/4HANA 2025 system; add-on and customer fields removed.",
     "release": "S4CORE 109 SP1",
     "generated": "2026-11-10",
     "rows": 1090
