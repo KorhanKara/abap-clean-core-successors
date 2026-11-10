@@ -1,238 +1,238 @@
 [
   {
-    "objectType": "BADI_DEF",
+    "objectType": "BADI",
     "objectName": "BD_MMPUR_REQ_FIELDCONTROLS",
     "objectState": "NOT_TO_BE_RELEASED",
-    "successorType": "BADI_DEF",
+    "successorType": "BADI",
     "successorName": "MM_PUR_S4_PR_FLDCNTRL_SIMPLE",
     "abapCloud": "Released"
   },
   {
-    "objectType": "BADI_DEF",
+    "objectType": "BADI",
     "objectName": "CIT_CHG_CLSFCTN_BEFORE_SAVE",
     "objectState": "DEPRECATED",
-    "successorType": "BADI_DEF",
+    "successorType": "BADI",
     "successorName": "CIT_MODIFY_CLFN_BEFORE_SAVE",
     "abapCloud": "Key user only"
   },
   {
-    "objectType": "BADI_DEF",
+    "objectType": "BADI",
     "objectName": "CIT_GET_REPORTING_DATE",
     "objectState": "DEPRECATED",
-    "successorType": "BADI_DEF",
+    "successorType": "BADI",
     "successorName": "CIT_MODIFY_REPORTING_DATE",
     "abapCloud": "Key user only"
   },
   {
-    "objectType": "BADI_DEF",
+    "objectType": "BADI",
     "objectName": "ES_SRF_TAX_CALENDAR",
     "objectState": "DEPRECATED",
-    "successorType": "BADI_DEF",
+    "successorType": "BADI",
     "successorName": "ES_SRF_TAX_CALENDAR_V2",
     "abapCloud": "Released"
   },
   {
-    "objectType": "BADI_DEF",
+    "objectType": "BADI",
     "objectName": "FIWTJP_MY_NUMBER",
     "objectState": "DEPRECATED",
-    "successorType": "BADI_DEF",
+    "successorType": "BADI",
     "successorName": "FIWTJP_VALIDATE_MY_NUMBER",
     "abapCloud": "Released"
   },
   {
-    "objectType": "BADI_DEF",
+    "objectType": "BADI",
     "objectName": "HANDLING_UNIT_HEADER",
     "objectState": "DEPRECATED",
-    "successorType": "BADI_DEF",
+    "successorType": "BADI",
     "successorName": "BADI_LOHUM_ASN_IN_CHANGE_HU",
     "abapCloud": "Released"
   },
   {
-    "objectType": "BADI_DEF",
+    "objectType": "BADI",
     "objectName": "LCM_LT_WF_CUSTOM_STEP",
     "objectState": "DEPRECATED",
-    "successorType": "BADI_DEF",
+    "successorType": "BADI",
     "successorName": "LCM_LT_WF_CUSTOM_STEP_2",
     "abapCloud": "Released"
   },
   {
-    "objectType": "BADI_DEF",
+    "objectType": "BADI",
     "objectName": "LE_SHP_DELIVERY_PROC",
     "objectState": "NOT_TO_BE_RELEASED",
-    "successorType": "BADI_DEF",
+    "successorType": "BADI",
     "successorName": "LE_SHP_SAVE_DOCUMENT_PREPARE",
     "abapCloud": "Released"
   },
   {
-    "objectType": "BADI_DEF",
+    "objectType": "BADI",
     "objectName": "LE_SHP_GOODSMOVEMENT",
     "objectState": "NOT_TO_BE_RELEASED",
-    "successorType": "BADI_DEF",
+    "successorType": "BADI",
     "successorName": "LE_SHP_MODIFY_POST_GM",
     "abapCloud": "Released"
   },
   {
-    "objectType": "BADI_DEF",
+    "objectType": "BADI",
     "objectName": "LOG_EDI_MM_INVOICE_EXT",
     "objectState": "NOT_TO_BE_RELEASED",
-    "successorType": "BADI_DEF",
+    "successorType": "BADI",
     "successorName": "LOG_EDI_MM_INVOICE_CE_MAP",
     "abapCloud": "Released"
   },
   {
-    "objectType": "BADI_DEF",
+    "objectType": "BADI",
     "objectName": "MD_ADD_ELEMENTS",
     "objectState": "NOT_TO_BE_RELEASED",
-    "successorType": "BADI_DEF",
+    "successorType": "BADI",
     "successorName": "PPH_SUPPLY_DEMAND_LIST",
     "abapCloud": "Released"
   },
   {
-    "objectType": "BADI_DEF",
+    "objectType": "BADI",
     "objectName": "MEOUT_BAPI_CUST",
     "objectState": "NOT_TO_BE_RELEASED",
-    "successorType": "BADI_DEF",
+    "successorType": "BADI",
     "successorName": "MEOUT_BAPI_CUST_MAP2E_DATA",
     "abapCloud": "Released"
   },
   {
-    "objectType": "BADI_DEF",
+    "objectType": "BADI",
     "objectName": "MEOUT_BAPI_CUST",
     "objectState": "NOT_TO_BE_RELEASED",
-    "successorType": "BADI_DEF",
+    "successorType": "BADI",
     "successorName": "MEOUT_BAPI_CUST_MAP2I_DATA",
     "abapCloud": "Released"
   },
   {
-    "objectType": "BADI_DEF",
+    "objectType": "BADI",
     "objectName": "MEOUT_BAPI_CUST",
     "objectState": "NOT_TO_BE_RELEASED",
-    "successorType": "BADI_DEF",
+    "successorType": "BADI",
     "successorName": "MEOUT_BAPI_CUST_OUTBOUND",
     "abapCloud": "Released"
   },
   {
-    "objectType": "BADI_DEF",
+    "objectType": "BADI",
     "objectName": "MEOUT_BAPI_CUST",
     "objectState": "NOT_TO_BE_RELEASED",
-    "successorType": "BADI_DEF",
+    "successorType": "BADI",
     "successorName": "MEOUT_BAPI_DETERMINE_GROS_COUT",
     "abapCloud": "Released"
   },
   {
-    "objectType": "BADI_DEF",
+    "objectType": "BADI",
     "objectName": "MEOUT_BAPI_CUST",
     "objectState": "NOT_TO_BE_RELEASED",
-    "successorType": "BADI_DEF",
+    "successorType": "BADI",
     "successorName": "MEOUT_BAPI_HANDLE_EXT_REF",
     "abapCloud": "Released"
   },
   {
-    "objectType": "BADI_DEF",
+    "objectType": "BADI",
     "objectName": "MEOUT_BAPI_CUST",
     "objectState": "NOT_TO_BE_RELEASED",
-    "successorType": "BADI_DEF",
+    "successorType": "BADI",
     "successorName": "MEOUT_BAPI_MAP2E_EXTENSIONOUT",
     "abapCloud": "Released"
   },
   {
-    "objectType": "BADI_DEF",
+    "objectType": "BADI",
     "objectName": "MEOUT_BAPI_CUST",
     "objectState": "NOT_TO_BE_RELEASED",
-    "successorType": "BADI_DEF",
+    "successorType": "BADI",
     "successorName": "MEOUT_BAPI_MAP2I_EXTENSIONIN",
     "abapCloud": "Released"
   },
   {
-    "objectType": "BADI_DEF",
+    "objectType": "BADI",
     "objectName": "ME_PROCESS_OUT_CUST",
     "objectState": "NOT_TO_BE_RELEASED",
-    "successorType": "BADI_DEF",
+    "successorType": "BADI",
     "successorName": "MM_PUR_S4_CTR_MODIFY_HEADER",
     "abapCloud": "Released"
   },
   {
-    "objectType": "BADI_DEF",
+    "objectType": "BADI",
     "objectName": "ME_PROCESS_PO_CUST",
     "objectState": "NOT_TO_BE_RELEASED",
-    "successorType": "BADI_DEF",
+    "successorType": "BADI",
     "successorName": "MM_PUR_S4_PO_OPEN",
     "abapCloud": "Released"
   },
   {
-    "objectType": "BADI_DEF",
+    "objectType": "BADI",
     "objectName": "MM_PUR_S4_CCTR_FIELDCONTROLS",
     "objectState": "DEPRECATED",
-    "successorType": "BADI_DEF",
+    "successorType": "BADI",
     "successorName": "MM_PUR_S4_CCTR_FLDCTRL_SIMPLE",
     "abapCloud": "Released"
   },
   {
-    "objectType": "BADI_DEF",
+    "objectType": "BADI",
     "objectName": "MM_PUR_S4_CCTR_MOD_DISTR_CTR",
     "objectState": "DEPRECATED",
-    "successorType": "BADI_DEF",
+    "successorType": "BADI",
     "successorName": "MM_PUR_S4_CCTR_MOD_DISTR_OA",
     "abapCloud": "Released"
   },
   {
-    "objectType": "BADI_DEF",
+    "objectType": "BADI",
     "objectName": "MM_PUR_S4_CQTN_SOAP_API",
     "objectState": "NOT_TO_BE_RELEASED",
-    "successorType": "BADI_DEF",
+    "successorType": "BADI",
     "successorName": "MM_PUR_S4_CQTN_DEFINE_PROC",
     "abapCloud": "Released"
   },
   {
-    "objectType": "BADI_DEF",
+    "objectType": "BADI",
     "objectName": "MM_PUR_S4_CRFQ_SOAP_API",
     "objectState": "NOT_TO_BE_RELEASED",
-    "successorType": "BADI_DEF",
+    "successorType": "BADI",
     "successorName": "MM_PUR_S4_CRFQ_DEFINE_MAP",
     "abapCloud": "Released"
   },
   {
-    "objectType": "BADI_DEF",
+    "objectType": "BADI",
     "objectName": "NOTIF_EVENT_POST",
     "objectState": "NOT_TO_BE_RELEASED",
-    "successorType": "BADI_DEF",
+    "successorType": "BADI",
     "successorName": "BADI_QQM_NOTIF_EVENT_POST_CLD",
     "abapCloud": "Released"
   },
   {
-    "objectType": "BADI_DEF",
+    "objectType": "BADI",
     "objectName": "SRF_QUERY_EXECUTION",
     "objectState": "DEPRECATED",
-    "successorType": "BADI_DEF",
+    "successorType": "BADI",
     "successorName": "SRF_QUERY_EXECUTION_V2",
     "abapCloud": "Released"
   },
   {
-    "objectType": "BADI_DEF",
+    "objectType": "BADI",
     "objectName": "SRF_RPG_ACT_ON_CREATE",
     "objectState": "DEPRECATED",
-    "successorType": "BADI_DEF",
+    "successorType": "BADI",
     "successorName": "SRF_RPG_ACT_ON_CREATE_V2",
     "abapCloud": "Released"
   },
   {
-    "objectType": "BADI_DEF",
+    "objectType": "BADI",
     "objectName": "SRF_RPG_ACT_ON_RETRIEVE",
     "objectState": "DEPRECATED",
-    "successorType": "BADI_DEF",
+    "successorType": "BADI",
     "successorName": "SRF_RPG_ACT_ON_RETRIEVE_V2",
     "abapCloud": "Released"
   },
   {
-    "objectType": "BADI_DEF",
+    "objectType": "BADI",
     "objectName": "SRF_RPG_ACT_PAR_HANDLE",
     "objectState": "DEPRECATED",
-    "successorType": "BADI_DEF",
+    "successorType": "BADI",
     "successorName": "SRF_RPG_ACT_PAR_HANDLE_V2",
     "abapCloud": "Released"
   },
   {
-    "objectType": "BADI_DEF",
+    "objectType": "BADI",
     "objectName": "STANDARDMATERIAL_GET_DATA",
     "objectState": "NOT_TO_BE_RELEASED",
     "successorType": "DDLS",
@@ -240,7 +240,7 @@
     "abapCloud": "Released"
   },
   {
-    "objectType": "BADI_DEF",
+    "objectType": "BADI",
     "objectName": "STANDARDMATERIAL_GET_DATA",
     "objectState": "NOT_TO_BE_RELEASED",
     "successorType": "DDLS",
@@ -248,7 +248,7 @@
     "abapCloud": "Released"
   },
   {
-    "objectType": "BADI_DEF",
+    "objectType": "BADI",
     "objectName": "STANDARDMATERIAL_GET_DATA",
     "objectState": "NOT_TO_BE_RELEASED",
     "successorType": "DDLS",
@@ -256,7 +256,7 @@
     "abapCloud": "Released"
   },
   {
-    "objectType": "BADI_DEF",
+    "objectType": "BADI",
     "objectName": "STANDARDMATERIAL_GET_DATA",
     "objectState": "NOT_TO_BE_RELEASED",
     "successorType": "DDLS",
@@ -264,7 +264,7 @@
     "abapCloud": "Released"
   },
   {
-    "objectType": "BADI_DEF",
+    "objectType": "BADI",
     "objectName": "STANDARDMATERIAL_GET_DATA",
     "objectState": "NOT_TO_BE_RELEASED",
     "successorType": "DDLS",
@@ -272,7 +272,7 @@
     "abapCloud": "Released"
   },
   {
-    "objectType": "BADI_DEF",
+    "objectType": "BADI",
     "objectName": "STANDARDMATERIAL_GET_DATA",
     "objectState": "NOT_TO_BE_RELEASED",
     "successorType": "DDLS",
@@ -280,7 +280,7 @@
     "abapCloud": "Released"
   },
   {
-    "objectType": "BADI_DEF",
+    "objectType": "BADI",
     "objectName": "STANDARDMATERIAL_GET_DATA",
     "objectState": "NOT_TO_BE_RELEASED",
     "successorType": "DDLS",
@@ -288,7 +288,7 @@
     "abapCloud": "Released"
   },
   {
-    "objectType": "BADI_DEF",
+    "objectType": "BADI",
     "objectName": "STANDARDMATERIAL_GET_DATA",
     "objectState": "NOT_TO_BE_RELEASED",
     "successorType": "DDLS",
@@ -296,7 +296,7 @@
     "abapCloud": "Released"
   },
   {
-    "objectType": "BADI_DEF",
+    "objectType": "BADI",
     "objectName": "STANDARDMATERIAL_GET_DATA",
     "objectState": "NOT_TO_BE_RELEASED",
     "successorType": "DDLS",
@@ -304,7 +304,7 @@
     "abapCloud": "Released"
   },
   {
-    "objectType": "BADI_DEF",
+    "objectType": "BADI",
     "objectName": "STANDARDMATERIAL_GET_DATA",
     "objectState": "NOT_TO_BE_RELEASED",
     "successorType": "DDLS",
@@ -312,7 +312,7 @@
     "abapCloud": "Released"
   },
   {
-    "objectType": "BADI_DEF",
+    "objectType": "BADI",
     "objectName": "STANDARDMATERIAL_GET_DATA",
     "objectState": "NOT_TO_BE_RELEASED",
     "successorType": "DDLS",
@@ -320,7 +320,7 @@
     "abapCloud": "Released"
   },
   {
-    "objectType": "BADI_DEF",
+    "objectType": "BADI",
     "objectName": "STANDARDMATERIAL_GET_DATA",
     "objectState": "NOT_TO_BE_RELEASED",
     "successorType": "DDLS",
@@ -328,7 +328,7 @@
     "abapCloud": "Released"
   },
   {
-    "objectType": "BADI_DEF",
+    "objectType": "BADI",
     "objectName": "STANDARDMATERIAL_GET_DATA",
     "objectState": "NOT_TO_BE_RELEASED",
     "successorType": "DDLS",
@@ -336,7 +336,7 @@
     "abapCloud": "Released"
   },
   {
-    "objectType": "BADI_DEF",
+    "objectType": "BADI",
     "objectName": "STANDARDMATERIAL_GET_DATA",
     "objectState": "NOT_TO_BE_RELEASED",
     "successorType": "DDLS",
@@ -344,7 +344,7 @@
     "abapCloud": "Released"
   },
   {
-    "objectType": "BADI_DEF",
+    "objectType": "BADI",
     "objectName": "STANDARDMATERIAL_GET_DATA",
     "objectState": "NOT_TO_BE_RELEASED",
     "successorType": "DDLS",
@@ -352,7 +352,7 @@
     "abapCloud": "Released"
   },
   {
-    "objectType": "BADI_DEF",
+    "objectType": "BADI",
     "objectName": "STANDARDMATERIAL_GET_DATA",
     "objectState": "NOT_TO_BE_RELEASED",
     "successorType": "DDLS",
@@ -360,7 +360,7 @@
     "abapCloud": "Released"
   },
   {
-    "objectType": "BADI_DEF",
+    "objectType": "BADI",
     "objectName": "STANDARDMATERIAL_GET_DATA",
     "objectState": "NOT_TO_BE_RELEASED",
     "successorType": "DDLS",
@@ -368,7 +368,7 @@
     "abapCloud": "Released"
   },
   {
-    "objectType": "BADI_DEF",
+    "objectType": "BADI",
     "objectName": "STANDARDMATERIAL_GET_DATA",
     "objectState": "NOT_TO_BE_RELEASED",
     "successorType": "DDLS",
@@ -376,7 +376,7 @@
     "abapCloud": "Released"
   },
   {
-    "objectType": "BADI_DEF",
+    "objectType": "BADI",
     "objectName": "STANDARDMATERIAL_GET_DATA",
     "objectState": "NOT_TO_BE_RELEASED",
     "successorType": "DDLS",
@@ -384,7 +384,7 @@
     "abapCloud": "Released"
   },
   {
-    "objectType": "BADI_DEF",
+    "objectType": "BADI",
     "objectName": "STANDARDMATERIAL_GET_DATA",
     "objectState": "NOT_TO_BE_RELEASED",
     "successorType": "DDLS",
@@ -392,7 +392,7 @@
     "abapCloud": "Released"
   },
   {
-    "objectType": "BADI_DEF",
+    "objectType": "BADI",
     "objectName": "STANDARDMATERIAL_GET_DATA",
     "objectState": "NOT_TO_BE_RELEASED",
     "successorType": "DDLS",
@@ -400,7 +400,7 @@
     "abapCloud": "Released"
   },
   {
-    "objectType": "BADI_DEF",
+    "objectType": "BADI",
     "objectName": "STANDARDMATERIAL_GET_DATA",
     "objectState": "NOT_TO_BE_RELEASED",
     "successorType": "DDLS",
@@ -408,7 +408,7 @@
     "abapCloud": "Released"
   },
   {
-    "objectType": "BADI_DEF",
+    "objectType": "BADI",
     "objectName": "STANDARDMATERIAL_GET_DATA",
     "objectState": "NOT_TO_BE_RELEASED",
     "successorType": "DDLS",
@@ -416,7 +416,7 @@
     "abapCloud": "Released"
   },
   {
-    "objectType": "BADI_DEF",
+    "objectType": "BADI",
     "objectName": "STANDARDMATERIAL_GET_DATA",
     "objectState": "NOT_TO_BE_RELEASED",
     "successorType": "DDLS",
@@ -424,7 +424,7 @@
     "abapCloud": "Released"
   },
   {
-    "objectType": "BADI_DEF",
+    "objectType": "BADI",
     "objectName": "STANDARDMATERIAL_GET_DATA",
     "objectState": "NOT_TO_BE_RELEASED",
     "successorType": "DDLS",
@@ -432,7 +432,7 @@
     "abapCloud": "Released"
   },
   {
-    "objectType": "BADI_DEF",
+    "objectType": "BADI",
     "objectName": "STANDARDMATERIAL_GET_DATA",
     "objectState": "NOT_TO_BE_RELEASED",
     "successorType": "DDLS",
@@ -440,7 +440,7 @@
     "abapCloud": "Released"
   },
   {
-    "objectType": "BADI_DEF",
+    "objectType": "BADI",
     "objectName": "STANDARDMATERIAL_GET_DATA",
     "objectState": "NOT_TO_BE_RELEASED",
     "successorType": "DDLS",
@@ -448,7 +448,7 @@
     "abapCloud": "Released"
   },
   {
-    "objectType": "BADI_DEF",
+    "objectType": "BADI",
     "objectName": "STANDARDMATERIAL_GET_DATA",
     "objectState": "NOT_TO_BE_RELEASED",
     "successorType": "DDLS",
@@ -456,7 +456,7 @@
     "abapCloud": "Released"
   },
   {
-    "objectType": "BADI_DEF",
+    "objectType": "BADI",
     "objectName": "STANDARDMATERIAL_GET_DATA",
     "objectState": "NOT_TO_BE_RELEASED",
     "successorType": "DDLS",
@@ -464,7 +464,7 @@
     "abapCloud": "Released"
   },
   {
-    "objectType": "BADI_DEF",
+    "objectType": "BADI",
     "objectName": "STANDARDMATERIAL_SAVE_DATA",
     "objectState": "NOT_TO_BE_RELEASED",
     "successorType": "BDEF",
@@ -472,10 +472,10 @@
     "abapCloud": "Released"
   },
   {
-    "objectType": "BADI_DEF",
+    "objectType": "BADI",
     "objectName": "WORKORDER_UPDATE",
     "objectState": "NOT_TO_BE_RELEASED",
-    "successorType": "BADI_DEF",
+    "successorType": "BADI",
     "successorName": "BD_MFGORDER_CHECK_BEFORE_SAVE",
     "abapCloud": "Released"
   },

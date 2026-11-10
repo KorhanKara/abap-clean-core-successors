@@ -842,6 +842,11 @@ CLASS lcl_report DEFINITION FINAL.
       IMPORTING it_keys          TYPE tt_api_key
       RETURNING VALUE(rt_states) TYPE tt_api_state.
 
+    METHODS display_type
+      IMPORTING iv_type        TYPE trobjtype
+                iv_sub_type    TYPE ars_sub_object_type
+      RETURNING VALUE(rv_type) TYPE trobjtype.
+
     METHODS availability
       IMPORTING is_state       TYPE ts_api_state
       RETURNING VALUE(rv_text) TYPE ts_successor-abap_cloud.
@@ -1046,6 +1051,13 @@ CLASS lcl_report IMPLEMENTATION.
   ENDMETHOD.
 
 
+  METHOD display_type.
+    rv_type = COND #( WHEN iv_sub_type = 'BADI_DEF'                         THEN 'BADI'
+                      WHEN iv_sub_type IS INITIAL OR strlen( iv_sub_type ) > 4 THEN iv_type
+                      ELSE iv_sub_type ).
+  ENDMETHOD.
+
+
   METHOD availability.
     rv_text = COND #( WHEN is_state-release_state = 'RELEASED' AND is_state-cloud = abap_true
                         THEN c_released
@@ -1057,8 +1069,8 @@ CLASS lcl_report IMPLEMENTATION.
 
   METHOD object_type_help.
     TYPES: BEGIN OF ts_type,
-             object_type TYPE char10,
-             description TYPE ddtext,
+             object_type TYPE trobjtype,
+             description TYPE as4text,
            END OF ts_type.
     DATA lt_types TYPE STANDARD TABLE OF ts_type WITH EMPTY KEY.
 
@@ -1068,10 +1080,8 @@ CLASS lcl_report IMPLEMENTATION.
       INTO TABLE @DATA(lt_links).
 
     LOOP AT lt_links INTO DATA(ls_link).
-      DATA(lv_type) = CONV ts_type-object_type( COND #( WHEN ls_link-sub_object_type = 'CDS_STOB'
-                                                          OR ls_link-sub_object_type IS INITIAL
-                                                          THEN ls_link-object_type
-                                                        ELSE ls_link-sub_object_type ) ).
+      DATA(lv_type) = display_type( iv_type     = ls_link-object_type
+                                    iv_sub_type = ls_link-sub_object_type ).
       INSERT VALUE #( object_type = lv_type
                       description = SWITCH #( lv_type
                                                WHEN 'FUNC'     THEN 'Function module'
@@ -1082,7 +1092,7 @@ CLASS lcl_report IMPLEMENTATION.
                                                WHEN 'DDLS'     THEN 'CDS view'
                                                WHEN 'TABL'     THEN 'Table'
                                                WHEN 'TTYP'     THEN 'Table type'
-                                               WHEN 'BADI_DEF' THEN 'BAdI definition'
+                                               WHEN 'BADI'     THEN 'BAdI definition'
                                                WHEN 'SUSO'     THEN 'Authorization object'
                                                WHEN 'CHKV'     THEN 'ATC check variant'
                                                WHEN 'IWSV'     THEN 'Gateway service' ) )
@@ -1161,19 +1171,16 @@ CLASS lcl_report IMPLEMENTATION.
       DATA(ls_target) = VALUE #( lt_states[ object_type     = ls_link-successor_object_type
                                             object_id       = ls_link-successor_object_name
                                             sub_object_name = ls_link-successor_sub_object_name ] OPTIONAL ).
-      INSERT VALUE #( object_type    = COND #( WHEN ls_link-sub_object_type = 'CDS_STOB' OR ls_link-sub_object_type IS INITIAL
-                                                 THEN ls_link-object_type
-                                               ELSE ls_link-sub_object_type )
+      INSERT VALUE #( object_type    = display_type( iv_type     = ls_link-object_type
+                                                     iv_sub_type = ls_link-sub_object_type )
                       object_name    = COND #( WHEN ls_link-sub_object_name IS INITIAL
                                                  THEN ls_link-object_id
                                                ELSE ls_link-sub_object_name )
                       object_state   = COND #( WHEN ls_source-release_state IS INITIAL
                                                  THEN 'NO ENTRY'
                                                ELSE ls_source-release_state )
-                      successor_type = COND #( WHEN ls_link-successor_sub_object_type = 'CDS_STOB'
-                                                 OR ls_link-successor_sub_object_type IS INITIAL
-                                                 THEN ls_link-successor_object_type
-                                               ELSE ls_link-successor_sub_object_type )
+                      successor_type = display_type( iv_type     = ls_link-successor_object_type
+                                                     iv_sub_type = ls_link-successor_sub_object_type )
                       successor_name = COND #( WHEN ls_link-successor_sub_object_name IS INITIAL
                                                  THEN ls_link-successor_object_name
                                                ELSE ls_link-successor_sub_object_name )
