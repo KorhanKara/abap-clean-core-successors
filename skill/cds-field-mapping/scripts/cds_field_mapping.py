@@ -120,6 +120,47 @@ SELECT_RE = re.compile(
 )
 
 
+CLAUSE_ORDER = ("WHERE", "GROUP BY", "HAVING", "ORDER BY", "INTO", "APPENDING", "UP TO")
+CLAUSE_RE = re.compile(r"\b(INTO|APPENDING|WHERE|GROUP\s+BY|HAVING|ORDER\s+BY|UP\s+TO)\b", re.IGNORECASE)
+
+
+def split_clauses(rest):
+    """Split the text after FROM <table> into its clauses, ignoring keywords inside literals."""
+    marks = []
+    for match in CLAUSE_RE.finditer(rest):
+        if rest[:match.start()].count("'") % 2 == 0 and rest[:match.start()].count("`") % 2 == 0:
+            marks.append(match)
+    from_extra = rest[:marks[0].start()].strip() if marks else rest.strip()
+    clauses = {}
+    for index, match in enumerate(marks):
+        end = marks[index + 1].start() if index + 1 < len(marks) else len(rest)
+        key = " ".join(match.group(1).upper().split())
+        clauses[key] = rest[match.end():end].strip()
+    return from_extra, clauses
+
+
+def rewrite_condition(text, view, known_columns, unmapped, in_expression):
+    """Replace table columns in a WHERE/ORDER BY/... clause; leave literals and host variables alone."""
+    def replace(match):
+        name = match.group(1)
+        if name.upper() not in known_columns:
+            return name
+        cds_f = cds_field_for_table(view, name)
+        if cds_f:
+            return cds_f
+        if name not in unmapped:
+            unmapped.append(name)
+            used = expressions_using(view, name)
+            if used:
+                in_expression[name] = used
+        return name
+
+    parts = re.split(r"('(?:[^']|'')*'|`[^`]*`)", text)
+    return "".join(part if index % 2 else
+                   re.sub(r"(?<![@\w~\-])([A-Za-z_][A-Za-z0-9_]*)\b", replace, part)
+                   for index, part in enumerate(parts))
+
+
 def rewrite_select(data, statement, allow_unreleased=False):
     stmt = statement.strip().rstrip(".")
     m = SELECT_RE.match(stmt)
@@ -135,6 +176,10 @@ def rewrite_select(data, statement, allow_unreleased=False):
     if not candidates:
         return {"error": f"No {'​' if allow_unreleased else 'released '}CDS view found in the mapping for table '{table}'. "
                           f"It may not be covered by this dataset, or genuinely have no CDS successor yet."}
+
+    known_columns = {m.get("tableField", "").upper()
+                     for v in views_for_table(data, table, allow_unreleased=True)
+                     for m in v.get("mapping", []) if m.get("tableField")}
 
     results = []
     for view in candidates:
@@ -154,21 +199,20 @@ def rewrite_select(data, statement, allow_unreleased=False):
                 if used:
                     in_expression[f] = used
 
+        from_extra, clauses = split_clauses(rest)
         # rewrite WHERE/other clause field references too (best-effort word-boundary replace)
-        rewritten_rest = rest
-        for f, cds_f in field_mappings:
-            if f == "*":
-                continue
-            rewritten_rest = re.sub(rf"\b{re.escape(f)}\b", cds_f, rewritten_rest, flags=re.IGNORECASE)
+        for key in ("WHERE", "GROUP BY", "HAVING", "ORDER BY"):
+            if key in clauses:
+                clauses[key] = rewrite_condition(clauses[key], view, known_columns, unmapped, in_expression)
 
         select_list = ", ".join(
             f"{cds_f}" if orig == "*" else f"{cds_f} AS {orig}"
             for orig, cds_f in field_mappings
         )
         single = "SINGLE " if m.group("single") else ""
-        new_stmt = f"SELECT {single}{select_list} FROM {view['cdsName']} {rewritten_rest}".strip()
-        if not new_stmt.endswith("."):
-            new_stmt += "."
+        lines = [f"SELECT {single}{select_list}", f"  FROM {view['cdsName']}{' ' + from_extra if from_extra else ''}"]
+        lines += [f"  {key} {clauses[key]}" for key in CLAUSE_ORDER if key in clauses]
+        new_stmt = "\n".join(lines) + "."
 
         result = {
             "cdsView": view["cdsName"],

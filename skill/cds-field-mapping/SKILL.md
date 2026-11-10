@@ -41,6 +41,9 @@ view SAP names is not usable.
   program still uses the old names, and the alias keeps the change to one
   statement. `--rewrite` already does this; do the same in any rewrite you write
   by hand (joins, subqueries, `FOR ALL ENTRIES`).
+- **Write the SELECT in this order:** field list, `FROM`, `WHERE`, `GROUP BY`,
+  `ORDER BY`, `INTO`, `UP TO`, one clause per line. `--rewrite` already does this,
+  and maps table columns in `WHERE` and `ORDER BY` too.
 - **Report unmapped fields, never drop them.** A field missing from a view means
   that view is the wrong target or the rewrite needs a join. Dropping it gives code
   that compiles and returns wrong data.
