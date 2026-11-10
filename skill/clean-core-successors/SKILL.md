@@ -32,6 +32,13 @@ view SAP names is not usable.
 
 ## How to answer
 
+- **Show the change, then ask before applying it. Always.** For every fix, show
+  the old code and the new code one after the other, with a short table of what
+  each old field or object became and what was left out and why. Then ask the
+  user whether to apply it. Do not write to the user's system, file or editor
+  until they say yes, even when they asked you to "fix" or "convert" the code.
+  If they say no, leave everything as it was.
+
 - **Several views can cover one field.** `MARA-MATNR` is `Product` in five views.
   Prefer the view that covers every field the user's `SELECT` reads, so the
   statement keeps one source. `--rewrite` sorts candidates by fewest
