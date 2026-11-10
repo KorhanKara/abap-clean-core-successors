@@ -1,0 +1,77 @@
+---
+name: cds-field-mapping
+description: Answer which released CDS view field replaces a classic SAP table field (MARA-MATNR to I_PRODUCT-Product) and rewrite simple SELECTs from a classic table to a released CDS view, from a field-level mapping read out of a real SAP system. Use whenever the user asks what to use instead of a table or table field, which CDS view replaces a table, how to migrate a SELECT to a released API or clean core, or shares a SELECT on a classic table. Also use to load the user's own mapping file downloaded from the ZCDS_FIELD_MAPPING report.
+---
+
+# CDS field mapping
+
+The user wants to stop reading a classic table and read a released CDS view
+instead. SAP publishes which view replaces which table. This skill answers the
+part SAP does not publish: which view field replaces which table field.
+
+Answer from the data, never from memory. CDS field names look guessable and are
+not: `MARA-MATKL` is `ProductGroup`, not `MaterialGroup`.
+
+## Look it up
+
+```bash
+python3 scripts/cds_field_mapping.py --table MARA --field MATNR   # which view field replaces this field
+python3 scripts/cds_field_mapping.py --table MARA                 # all views and their full mapping
+python3 scripts/cds_field_mapping.py --cds I_PRODUCT --field ProductGroup   # where a view field comes from
+python3 scripts/cds_field_mapping.py --rewrite "SELECT SINGLE matnr matkl FROM mara INTO @DATA(ls_mara) WHERE matnr = @lv_matnr."
+```
+
+Not-released views are skipped. Add `--allow-unreleased` only to explain why a
+view SAP names is not usable.
+
+## How to answer
+
+- **Several views can cover one field.** `MARA-MATNR` is `Product` in five views.
+  Prefer the view that covers every field the user's `SELECT` reads, so the
+  statement keeps one source. Run `--rewrite` or `--table` with all the fields and
+  compare `unmappedFields` across candidates.
+- **Alias every renamed field** as `CdsField AS original_field`. The rest of the
+  program still uses the old names, and the alias keeps the change to one
+  statement. `--rewrite` already does this; do the same in any rewrite you write
+  by hand (joins, subqueries, `FOR ALL ENTRIES`).
+- **Report unmapped fields, never drop them.** A field missing from a view means
+  that view is the wrong target or the rewrite needs a join. Dropping it gives code
+  that compiles and returns wrong data.
+- **`usedInExpression` is information, not a replacement.** It lists view fields
+  that use the column inside a `CASE`, a calculation or a function, with the
+  definition. The value can differ from the column, so do not alias the view field
+  to the column. Show the expression and let the user decide.
+- **An empty mapping can be correct.** A view SAP names as successor can read a
+  different table or take a field through an association.
+- **A mapping is not proof of the same rows.** The view can filter or join.
+  Present rewrites as drafts to compile and test, and name the view's release
+  (below) when it matters.
+
+## The data
+
+`references/core-data-services.json` holds one entry per table and view pair:
+`tableName`, `cdsName`, `released` and a `mapping` list. Each row has `cdsField`
+and `tableField`. Rows with `computed: true` also carry `expression` and
+`definedIn`: the view field reads that column inside an expression. A row with an
+empty `tableField` could not be traced to a column of the table.
+
+`references/DATA_VERSION.json` records the release the data was read from. It is
+read from a standard system, so it holds no customer or add-on fields, and fields
+of other releases can differ.
+
+## Use the user's own system
+
+When the user's release differs, or they want their own extension fields, they
+can load their own data:
+
+1. Install the `ZCDS_FIELD_MAPPING` report from this repository with abapGit.
+2. Run it with **Download JSON** and save the file.
+3. Run `python3 scripts/import_mapping.py <file>`. Add `--release "S4CORE 109 SP01"`
+   to label the data; never guess the release.
+
+The import replaces the bundled file and keeps the old one as
+`core-data-services.json.bak`. The new file can hold the user's own fields, so it
+stays on their machine.
+
+Creating objects in an SAP system is the user's decision. Do not install or run
+the report for them without asking.
