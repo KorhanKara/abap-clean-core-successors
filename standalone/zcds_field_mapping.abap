@@ -256,16 +256,16 @@ CLASS lcl_mapping IMPLEMENTATION.
 
   METHOD read_view_dictionary.
     DATA(lv_ddl_name) = iv_name.
-    SELECT SINGLE FROM ddldependency
-      FIELDS objectname
+    SELECT SINGLE objectname
+      FROM ddldependency
       WHERE ddlname = @iv_name
         AND objecttype = 'VIEW'
         AND state = 'A'
       INTO @DATA(lv_sql_view).
     IF sy-subrc <> 0.
       lv_sql_view = iv_name.
-      SELECT SINGLE FROM ddldependency
-        FIELDS ddlname
+      SELECT SINGLE ddlname
+        FROM ddldependency
         WHERE objectname = @iv_name
           AND objecttype = 'VIEW'
           AND state = 'A'
@@ -273,8 +273,8 @@ CLASS lcl_mapping IMPLEMENTATION.
       lv_ddl_name = COND #( WHEN sy-subrc = 0 THEN CONV string( lv_owner_ddl ) ).
     ENDIF.
 
-    SELECT FROM dd27s
-      FIELDS objpos, viewfield, tabname, fieldname
+    SELECT objpos, viewfield, tabname, fieldname
+      FROM dd27s
       WHERE viewname = @lv_sql_view
         AND as4local = 'A'
       ORDER BY objpos
@@ -334,11 +334,11 @@ CLASS lcl_mapping IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    SELECT FROM @lt_candidates AS cand
+    SELECT cand~field, cand~tabname, cand~fieldname
+      FROM @lt_candidates AS cand
       INNER JOIN dd03l AS col
         ON  col~tabname   = cand~tabname
         AND col~fieldname = cand~fieldname
-      FIELDS cand~field, cand~tabname, cand~fieldname
       WHERE col~as4local = 'A'
       INTO TABLE @DATA(lt_confirmed).
 
@@ -362,8 +362,8 @@ CLASS lcl_mapping IMPLEMENTATION.
 
 
   METHOD field_names.
-    SELECT SINGLE FROM ddddlsrc
-      FIELDS source
+    SELECT SINGLE source
+      FROM ddddlsrc
       WHERE ddlname = @iv_name
         AND as4local = 'A'
       INTO @DATA(lv_source).
@@ -506,8 +506,8 @@ CLASS lcl_mapping IMPLEMENTATION.
 
 
   METHOD sources_from_ddl.
-    SELECT SINGLE FROM ddddlsrc
-      FIELDS source
+    SELECT SINGLE source
+      FROM ddddlsrc
       WHERE ddlname = @iv_name
         AND as4local = 'A'
       INTO @DATA(lv_source).
@@ -646,8 +646,8 @@ CLASS lcl_mapping IMPLEMENTATION.
     READ TABLE mt_tables REFERENCE INTO DATA(lr_table) WITH TABLE KEY name = lv_table.
     IF sy-subrc <> 0.
       DATA(ls_table) = VALUE ts_table( name = lv_table ).
-      SELECT FROM dd03l
-        FIELDS fieldname
+      SELECT fieldname
+        FROM dd03l
         WHERE tabname = @lv_table
           AND as4local = 'A'
         INTO TABLE @ls_table-columns.
@@ -974,8 +974,8 @@ CLASS lcl_report IMPLEMENTATION.
 
 
   METHOD system_release.
-    SELECT FROM cvers
-      FIELDS component, release, extrelease
+    SELECT component, release, extrelease
+      FROM cvers
       WHERE component IN ( 'S4CORE', 'SAP_BASIS' )
       INTO TABLE @DATA(lt_components).
 
@@ -986,8 +986,8 @@ CLASS lcl_report IMPLEMENTATION.
 
 
   METHOD has_successor_list.
-    SELECT SINGLE FROM ars_w_api_sccssr
-      FIELDS @abap_true
+    SELECT SINGLE @abap_true
+      FROM ars_w_api_sccssr
       WHERE object_type            = 'TABL'
         AND successor_object_type  = 'DDLS'
         AND compatibility_contract = 'C1'
@@ -996,8 +996,8 @@ CLASS lcl_report IMPLEMENTATION.
 
 
   METHOD all_pairs.
-    SELECT FROM ars_w_api_sccssr
-      FIELDS object_id, successor_object_name
+    SELECT object_id, successor_object_name
+      FROM ars_w_api_sccssr
       WHERE object_type            = 'TABL'
         AND successor_object_type  = 'DDLS'
         AND compatibility_contract = 'C1'
@@ -1031,14 +1031,14 @@ CLASS lcl_report IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    SELECT FROM @it_keys AS api_key
+    SELECT state~object_type, state~object_id, state~sub_object_name,
+           state~release_state,
+           state~use_in_sap_cloud_platform AS cloud
+      FROM @it_keys AS api_key
       INNER JOIN ars_w_api_state AS state
         ON  state~object_type     = api_key~object_type
         AND state~object_id       = api_key~object_id
         AND state~sub_object_name = api_key~sub_object_name
-      FIELDS state~object_type, state~object_id, state~sub_object_name,
-             state~release_state,
-             state~use_in_sap_cloud_platform AS cloud
       WHERE state~compatibility_contract = 'C1'
       INTO CORRESPONDING FIELDS OF TABLE @rt_states.
   ENDMETHOD.
@@ -1077,10 +1077,10 @@ CLASS lcl_report IMPLEMENTATION.
 
 
   METHOD read_successors.
-    SELECT FROM ars_w_api_sccssr
-      FIELDS object_type, object_id, sub_object_type, sub_object_name,
-             successor_object_type, successor_object_name,
-             successor_sub_object_type, successor_sub_object_name
+    SELECT object_type, object_id, sub_object_type, sub_object_name,
+           successor_object_type, successor_object_name,
+           successor_sub_object_type, successor_sub_object_name
+      FROM ars_w_api_sccssr
       WHERE compatibility_contract = 'C1'
         AND ( object_id IN @it_names OR sub_object_name IN @it_names )
       INTO TABLE @DATA(lt_links).
@@ -1130,8 +1130,8 @@ CLASS lcl_report IMPLEMENTATION.
 
 
   METHOD explain_missing.
-    SELECT FROM ars_w_api_state
-      FIELDS release_state, use_in_sap_cloud_platform AS cloud
+    SELECT release_state, use_in_sap_cloud_platform AS cloud
+      FROM ars_w_api_state
       WHERE compatibility_contract = 'C1'
         AND ( object_id IN @it_names OR sub_object_name IN @it_names )
       INTO TABLE @DATA(lt_found).
@@ -1245,8 +1245,8 @@ CLASS lcl_report IMPLEMENTATION.
 
 
   METHOD requested_fields.
-    SELECT FROM dd03l
-      FIELDS fieldname
+    SELECT fieldname
+      FROM dd03l
       WHERE tabname = @p_table
         AND as4local = 'A'
         AND fieldname IN @s_field
@@ -1412,18 +1412,18 @@ CLASS lcl_report IMPLEMENTATION.
 
 
   METHOD read_table_keys.
-    SELECT FROM dd03l AS field
+    SELECT CAST( field~position AS INT4 ) AS position,
+           field~fieldname AS field_name,
+           field~rollname  AS data_element,
+           text~ddtext     AS description,
+           field~datatype  AS data_type,
+           field~leng      AS length
+      FROM dd03l AS field
       LEFT OUTER JOIN dd04t AS text
         ON  text~rollname   = field~rollname
         AND text~ddlanguage = @sy-langu
         AND text~as4local   = 'A'
         AND text~as4vers    = '0000'
-      FIELDS CAST( field~position AS INT4 ) AS position,
-             field~fieldname AS field_name,
-             field~rollname  AS data_element,
-             text~ddtext     AS description,
-             field~datatype  AS data_type,
-             field~leng      AS length
       WHERE field~tabname  = @iv_table
         AND field~as4local = 'A'
         AND field~keyflag  = 'X'
@@ -1435,18 +1435,18 @@ CLASS lcl_report IMPLEMENTATION.
 
 
   METHOD read_view_keys.
-    SELECT FROM dd03nd AS field
+    SELECT field~position,
+           field~fieldname_raw AS field_name,
+           field~rollname      AS data_element,
+           text~ddtext         AS description,
+           field~datatype      AS data_type,
+           field~leng          AS length
+      FROM dd03nd AS field
       LEFT OUTER JOIN dd04t AS text
         ON  text~rollname   = field~rollname
         AND text~ddlanguage = @sy-langu
         AND text~as4local   = 'A'
         AND text~as4vers    = '0000'
-      FIELDS field~position,
-             field~fieldname_raw AS field_name,
-             field~rollname      AS data_element,
-             text~ddtext         AS description,
-             field~datatype      AS data_type,
-             field~leng          AS length
       WHERE field~strucobjn = @iv_view
         AND field~as4local  = 'A'
         AND field~keyflag   = 'X'

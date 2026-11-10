@@ -239,16 +239,16 @@ CLASS zcl_cds_field_mapping IMPLEMENTATION.
 
   METHOD read_view_dictionary.
     DATA(lv_ddl_name) = iv_name.
-    SELECT SINGLE FROM ddldependency
-      FIELDS objectname
+    SELECT SINGLE objectname
+      FROM ddldependency
       WHERE ddlname = @iv_name
         AND objecttype = 'VIEW'
         AND state = 'A'
       INTO @DATA(lv_sql_view).
     IF sy-subrc <> 0.
       lv_sql_view = iv_name.
-      SELECT SINGLE FROM ddldependency
-        FIELDS ddlname
+      SELECT SINGLE ddlname
+        FROM ddldependency
         WHERE objectname = @iv_name
           AND objecttype = 'VIEW'
           AND state = 'A'
@@ -256,8 +256,8 @@ CLASS zcl_cds_field_mapping IMPLEMENTATION.
       lv_ddl_name = COND #( WHEN sy-subrc = 0 THEN CONV string( lv_owner_ddl ) ).
     ENDIF.
 
-    SELECT FROM dd27s
-      FIELDS objpos, viewfield, tabname, fieldname
+    SELECT objpos, viewfield, tabname, fieldname
+      FROM dd27s
       WHERE viewname = @lv_sql_view
         AND as4local = 'A'
       ORDER BY objpos
@@ -317,11 +317,11 @@ CLASS zcl_cds_field_mapping IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    SELECT FROM @lt_candidates AS cand
+    SELECT cand~field, cand~tabname, cand~fieldname
+      FROM @lt_candidates AS cand
       INNER JOIN dd03l AS col
         ON  col~tabname   = cand~tabname
         AND col~fieldname = cand~fieldname
-      FIELDS cand~field, cand~tabname, cand~fieldname
       WHERE col~as4local = 'A'
       INTO TABLE @DATA(lt_confirmed).
 
@@ -345,8 +345,8 @@ CLASS zcl_cds_field_mapping IMPLEMENTATION.
 
 
   METHOD field_names.
-    SELECT SINGLE FROM ddddlsrc
-      FIELDS source
+    SELECT SINGLE source
+      FROM ddddlsrc
       WHERE ddlname = @iv_name
         AND as4local = 'A'
       INTO @DATA(lv_source).
@@ -489,8 +489,8 @@ CLASS zcl_cds_field_mapping IMPLEMENTATION.
 
 
   METHOD sources_from_ddl.
-    SELECT SINGLE FROM ddddlsrc
-      FIELDS source
+    SELECT SINGLE source
+      FROM ddddlsrc
       WHERE ddlname = @iv_name
         AND as4local = 'A'
       INTO @DATA(lv_source).
@@ -629,8 +629,8 @@ CLASS zcl_cds_field_mapping IMPLEMENTATION.
     READ TABLE mt_tables REFERENCE INTO DATA(lr_table) WITH TABLE KEY name = lv_table.
     IF sy-subrc <> 0.
       DATA(ls_table) = VALUE ts_table( name = lv_table ).
-      SELECT FROM dd03l
-        FIELDS fieldname
+      SELECT fieldname
+        FROM dd03l
         WHERE tabname = @lv_table
           AND as4local = 'A'
         INTO TABLE @ls_table-columns.
