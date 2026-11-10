@@ -382,21 +382,21 @@ CLASS lcl_report IMPLEMENTATION.
 
 
   METHOD show_objects.
-    IF p_oname IS INITIAL.
-      MESSAGE 'Enter an object name' TYPE 'S' DISPLAY LIKE 'E'.
-      RETURN.
-    ENDIF.
-
     DATA(lv_name) = to_upper( condense( p_oname ) ).
-    DATA(lt_names) = VALUE tt_name_range( ( sign   = 'I'
-                                            option = COND #( WHEN lv_name CA '*+' THEN 'CP' ELSE 'EQ' )
-                                            low    = lv_name ) ).
+    DATA(lt_names) = COND tt_name_range( WHEN lv_name IS NOT INITIAL
+                                         THEN VALUE #( ( sign   = 'I'
+                                                         option = COND #( WHEN lv_name CA '*+' THEN 'CP' ELSE 'EQ' )
+                                                         low    = lv_name ) ) ).
     mt_successors = read_successors( lt_names ).
     IF p_otype IS NOT INITIAL.
       DELETE mt_successors WHERE object_type <> p_otype.
     ENDIF.
 
     IF mt_successors IS INITIAL.
+      IF lv_name IS INITIAL.
+        MESSAGE |No successors found for type { p_otype }| TYPE 'S' DISPLAY LIKE 'E'.
+        RETURN.
+      ENDIF.
       explain_missing( lt_names ).
       RETURN.
     ENDIF.
@@ -480,7 +480,8 @@ CLASS lcl_report IMPLEMENTATION.
                                 CHANGING  t_table      = mt_successors ).
         lo_alv->get_functions( )->set_all( ).
         lo_alv->get_display_settings( )->set_list_header(
-          CONV #( |Successors of { condense( p_oname ) }, read from this system| ) ).
+          CONV #( |Successors of { COND string( WHEN p_oname IS INITIAL THEN `all objects` ELSE condense( p_oname ) ) }|
+               && |{ COND string( WHEN p_otype IS NOT INITIAL THEN | ({ p_otype })| ) }, read from this system| ) ).
 
         DATA(lo_columns) = lo_alv->get_columns( ).
         lo_columns->set_optimize( ).
