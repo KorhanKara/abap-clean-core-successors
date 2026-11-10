@@ -1057,8 +1057,8 @@ CLASS lcl_report IMPLEMENTATION.
 
   METHOD object_type_help.
     TYPES: BEGIN OF ts_type,
-             object_type TYPE c LENGTH 10,
-             description TYPE c LENGTH 40,
+             object_type TYPE char10,
+             description TYPE ddtext,
            END OF ts_type.
     DATA lt_types TYPE STANDARD TABLE OF ts_type WITH EMPTY KEY.
 
