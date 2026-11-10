@@ -75,6 +75,13 @@ CLASS lcl_report DEFINITION FINAL.
 
     TYPES tt_name_range TYPE RANGE OF ars_w_api_sccssr-sub_object_name.
 
+    TYPES: BEGIN OF ts_type_text,
+             object_type TYPE trobjtype,
+             text        TYPE as4text,
+           END OF ts_type_text,
+           tt_type_text TYPE HASHED TABLE OF ts_type_text WITH UNIQUE KEY object_type,
+           tt_type_list TYPE STANDARD TABLE OF trobjtype WITH EMPTY KEY.
+
     TYPES: BEGIN OF ts_export,
              release    TYPE string,
              pairs_from TYPE string,
@@ -104,6 +111,13 @@ CLASS lcl_report DEFINITION FINAL.
     METHODS read_states
       IMPORTING it_keys          TYPE tt_api_key
       RETURNING VALUE(rt_states) TYPE tt_api_state.
+
+    METHODS type_texts
+      IMPORTING it_types        TYPE tt_type_list
+      RETURNING VALUE(rt_texts) TYPE tt_type_text.
+
+    METHODS on_type_click FOR EVENT link_click OF cl_salv_events_table
+      IMPORTING row column.
 
     METHODS display_type
       IMPORTING iv_type        TYPE trobjtype
@@ -314,6 +328,64 @@ CLASS lcl_report IMPLEMENTATION.
   ENDMETHOD.
 
 
+  METHOD type_texts.
+    TYPES: BEGIN OF ts_lookup,
+             object_type TYPE trobjtype,
+           END OF ts_lookup.
+    DATA lt_lookup TYPE STANDARD TABLE OF ts_lookup WITH EMPTY KEY.
+
+    LOOP AT it_types INTO DATA(lv_type).
+      DATA(lv_text) = SWITCH as4text( lv_type
+                                      WHEN 'FUNC' THEN 'Function module'
+                                      WHEN 'CLAS' THEN 'Class'
+                                      WHEN 'INTF' THEN 'Interface'
+                                      WHEN 'DTEL' THEN 'Data element'
+                                      WHEN 'DOMA' THEN 'Domain'
+                                      WHEN 'DDLS' THEN 'CDS view'
+                                      WHEN 'TABL' THEN 'Table'
+                                      WHEN 'TTYP' THEN 'Table type'
+                                      WHEN 'BADI' THEN 'BAdI definition'
+                                      WHEN 'BDEF' THEN 'Behavior definition'
+                                      WHEN 'CHKV' THEN 'ATC check variant' ).
+      IF lv_text IS INITIAL.
+        INSERT VALUE #( object_type = lv_type ) INTO TABLE lt_lookup.
+      ENDIF.
+      INSERT VALUE #( object_type = lv_type text = lv_text ) INTO TABLE rt_texts.
+    ENDLOOP.
+    IF lt_lookup IS INITIAL.
+      RETURN.
+    ENDIF.
+
+    SELECT text~objectname, text~ddtext
+      FROM @lt_lookup AS lookup
+      INNER JOIN objt AS text
+        ON text~objectname = lookup~object_type
+      WHERE text~language = 'E'
+      INTO TABLE @DATA(lt_found).
+    LOOP AT lt_found INTO DATA(ls_found).
+      ASSIGN rt_texts[ object_type = ls_found-objectname ] TO FIELD-SYMBOL(<ls_text>).
+      IF sy-subrc = 0.
+        <ls_text>-text = ls_found-ddtext.
+      ENDIF.
+    ENDLOOP.
+  ENDMETHOD.
+
+
+  METHOD on_type_click.
+    DATA(ls_row) = VALUE ts_successor( mt_successors[ row ] OPTIONAL ).
+    DATA(lv_type) = CONV trobjtype( COND #( WHEN column = 'SUCCESSOR_TYPE' THEN ls_row-successor_type
+                                            ELSE ls_row-object_type ) ).
+    IF lv_type IS INITIAL.
+      RETURN.
+    ENDIF.
+
+    DATA(lt_texts) = type_texts( VALUE #( ( lv_type ) ) ).
+    DATA(lv_text) = VALUE #( lt_texts[ object_type = lv_type ]-text OPTIONAL ).
+    MESSAGE COND string( WHEN lv_text IS INITIAL THEN |{ lv_type }: no description in this system|
+                         ELSE |{ lv_type }: { lv_text }| ) TYPE 'I'.
+  ENDMETHOD.
+
+
   METHOD display_type.
     rv_type = COND #( WHEN iv_sub_type = 'BADI_DEF'                         THEN 'BADI'
                       WHEN iv_sub_type IS INITIAL OR strlen( iv_sub_type ) > 4 THEN iv_type
@@ -343,26 +415,17 @@ CLASS lcl_report IMPLEMENTATION.
       INTO TABLE @DATA(lt_links).
 
     LOOP AT lt_links INTO DATA(ls_link).
-      DATA(lv_type) = display_type( iv_type     = ls_link-object_type
-                                    iv_sub_type = ls_link-sub_object_type ).
-      INSERT VALUE #( object_type = lv_type
-                      description = SWITCH #( lv_type
-                                               WHEN 'FUNC'     THEN 'Function module'
-                                               WHEN 'CLAS'     THEN 'Class'
-                                               WHEN 'INTF'     THEN 'Interface'
-                                               WHEN 'DTEL'     THEN 'Data element'
-                                               WHEN 'DOMA'     THEN 'Domain'
-                                               WHEN 'DDLS'     THEN 'CDS view'
-                                               WHEN 'TABL'     THEN 'Table'
-                                               WHEN 'TTYP'     THEN 'Table type'
-                                               WHEN 'BADI'     THEN 'BAdI definition'
-                                               WHEN 'SUSO'     THEN 'Authorization object'
-                                               WHEN 'CHKV'     THEN 'ATC check variant'
-                                               WHEN 'IWSV'     THEN 'Gateway service' ) )
+      INSERT VALUE #( object_type = display_type( iv_type     = ls_link-object_type
+                                                  iv_sub_type = ls_link-sub_object_type ) )
              INTO TABLE lt_types.
     ENDLOOP.
     SORT lt_types BY object_type.
     DELETE ADJACENT DUPLICATES FROM lt_types COMPARING object_type.
+
+    DATA(lt_texts) = type_texts( VALUE #( FOR ls_type IN lt_types ( ls_type-object_type ) ) ).
+    LOOP AT lt_types ASSIGNING FIELD-SYMBOL(<ls_type>).
+      <ls_type>-description = VALUE #( lt_texts[ object_type = <ls_type>-object_type ]-text OPTIONAL ).
+    ENDLOOP.
 
     CALL FUNCTION 'F4IF_INT_TABLE_VALUE_REQUEST'
       EXPORTING
@@ -491,6 +554,11 @@ CLASS lcl_report IMPLEMENTATION.
         set_heading( io_columns = lo_columns iv_column = 'SUCCESSOR_TYPE' iv_text = 'Succ. type' ).
         set_heading( io_columns = lo_columns iv_column = 'SUCCESSOR_NAME' iv_text = 'Successor' ).
         set_heading( io_columns = lo_columns iv_column = 'ABAP_CLOUD'     iv_text = 'ABAP Cloud' ).
+        CAST cl_salv_column_table( lo_columns->get_column( 'OBJECT_TYPE' )
+          )->set_cell_type( if_salv_c_cell_type=>hotspot ).
+        CAST cl_salv_column_table( lo_columns->get_column( 'SUCCESSOR_TYPE' )
+          )->set_cell_type( if_salv_c_cell_type=>hotspot ).
+        SET HANDLER on_type_click FOR lo_alv->get_event( ).
         lo_alv->display( ).
       CATCH cx_salv_error INTO DATA(lx_error).
         MESSAGE lx_error TYPE 'S' DISPLAY LIKE 'E'.
