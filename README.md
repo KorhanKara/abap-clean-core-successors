@@ -123,8 +123,8 @@ Copy the `skill/cds-field-mapping` folder to wherever your assistant loads skill
 
 | Release | Result |
 |---|---|
-| S4CORE 109 SP01, SAP_BASIS 816 | Full run: 294 pairs, 234 views, 10,004 standard CDS fields. 7,358 read one column, 280 use columns in an expression. |
-| SAP_BASIS 755 | The copy-and-paste source of the current build compiles and activates. Not run. |
+| S4CORE 109 SP1, SAP_BASIS 816 | Full run with Download JSON: 294 pairs read from the system, 234 views, 10,004 standard CDS fields. 7,358 read one column, 280 use columns in an expression. 1,090 successors: 928 released for ABAP Cloud, 151 for key user apps only, 11 not released. |
+| S4CORE 105, SAP_BASIS 755 | The copy-and-paste source compiled and activated before the last two small fixes. Not run. The system's successor list holds no table to CDS pairs here, so the built-in pairs are used. |
 
 The class uses XCO, so releases older than the ones above may not compile.
 
