@@ -235,7 +235,7 @@ CLASS lcl_report IMPLEMENTATION.
 
     DATA(ls_component) = VALUE #( lt_components[ component = 'S4CORE' ]
                                   DEFAULT VALUE #( lt_components[ component = 'SAP_BASIS' ] OPTIONAL ) ).
-    rv_release = |{ ls_component-component } { ls_component-release } SP{ ls_component-extrelease ALPHA = OUT }|.
+    rv_release = condense( |{ ls_component-component } { ls_component-release } SP{ ls_component-extrelease ALPHA = OUT }| ).
   ENDMETHOD.
 
 

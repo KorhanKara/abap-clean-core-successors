@@ -91,7 +91,7 @@ def main():
     write_json(MAPPING_FILE, export["tables"])
     summary = summarize(export["tables"])
     version["mapping"] = {"source": "ZCDS_FIELD_MAPPING report, Download JSON",
-                          "release": args.release or export.get("release") or "user's own system",
+                          "release": (args.release or export.get("release") or "").strip() or "user's own system",
                           "pairsFrom": export.get("pairsFrom") or "unknown",
                           "generated": datetime.date.today().isoformat(),
                           **summary}
