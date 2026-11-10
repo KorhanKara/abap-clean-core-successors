@@ -91,7 +91,7 @@ can load their own data:
 
 1. Install the `ZCLEAN_CORE_SUCCESSORS` report from this repository, with abapGit or
    by pasting `standalone/zclean_core_successors.abap` into a new report.
-2. Run it with **Download JSON**. The report asks where to save the file; any
+2. Run it and press **Download JSON** in the toolbar. The report asks where to save the file; any
    folder works.
 3. Run `python3 scripts/import_mapping.py <path to the file>` from this skill's
    folder, the copy the assistant loads. The file carries its release;

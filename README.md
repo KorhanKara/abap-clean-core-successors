@@ -36,14 +36,14 @@ No other dependency is needed.
 
 ## Use
 
-Run `ZCLEAN_CORE_SUCCESSORS` in SE38. Choose **Show on screen** to look something up, or **Download JSON** to get everything in one file.
+Run `ZCLEAN_CORE_SUCCESSORS` in SE38. Execute (F8) shows a list on screen; the **Download JSON** button in the toolbar writes everything to one file.
 
-On screen, pick what to look up:
+Pick what to look up on screen:
 
 - **Table fields to CDS**: the field-level mapping of a classic table to its successor views.
 - **Other objects**: the successor of any object SAP has replaced, for example a function module, class, data element or older CDS view.
 
-**Download JSON** hides all other inputs and writes one file, for scripts, CI or AI assistants:
+**Download JSON** ignores the inputs on the screen and writes everything to one file, for scripts, CI or AI assistants:
 
 ```json
 {
@@ -113,7 +113,7 @@ The skill ships with data read from an **S/4HANA 2025 FPS01** system (`S4CORE 10
 
 Your release can have other views, other fields and other successors, and your system has its own extension fields. To make the skill answer for your system:
 
-1. Run `ZCLEAN_CORE_SUCCESSORS` in SE38 with **Download JSON**.
+1. Run `ZCLEAN_CORE_SUCCESSORS` in SE38 and press **Download JSON** in the toolbar.
 2. The report asks where to save the file. Any folder on your PC works, for example `C:\Users\<you>\Downloads\clean-core-successors.json`.
 3. Load the file into the copy of the skill your assistant uses. With the install path above:
 

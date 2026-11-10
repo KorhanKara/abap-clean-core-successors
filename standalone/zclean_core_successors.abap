@@ -2,13 +2,14 @@
 * Source: https://github.com/KorhanKara/abap-clean-core-successors
 REPORT zclean_core_successors.
 
+TABLES sscrfields.
+
 DATA gv_field TYPE fieldname.
 
-PARAMETERS: p_alv  RADIOBUTTON GROUP out DEFAULT 'X' USER-COMMAND mode,
-            p_json RADIOBUTTON GROUP out.
-SELECTION-SCREEN SKIP.
-PARAMETERS: p_tab  RADIOBUTTON GROUP what DEFAULT 'X' USER-COMMAND what MODIF ID wht,
-            p_obj  RADIOBUTTON GROUP what MODIF ID wht.
+SELECTION-SCREEN FUNCTION KEY 1.
+
+PARAMETERS: p_tab RADIOBUTTON GROUP what DEFAULT 'X' USER-COMMAND what,
+            p_obj RADIOBUTTON GROUP what.
 SELECTION-SCREEN SKIP.
 PARAMETERS p_table TYPE tabname MODIF ID tab.
 SELECT-OPTIONS s_field FOR gv_field NO INTERVALS MODIF ID tab.
@@ -755,6 +756,8 @@ CLASS lcl_report DEFINITION FINAL.
   PUBLIC SECTION.
     METHODS run.
 
+    METHODS download_json.
+
     METHODS object_type_help.
 
   PRIVATE SECTION.
@@ -840,6 +843,9 @@ CLASS lcl_report DEFINITION FINAL.
     DATA mv_note       TYPE string.
     DATA mv_source     TYPE string.
     DATA mo_extractor  TYPE REF TO lcl_mapping.
+
+    METHODS no_successor_list
+      RETURNING VALUE(rv_missing) TYPE abap_bool.
 
     METHODS has_successor_list
       RETURNING VALUE(rv_found) TYPE abap_bool.
@@ -936,14 +942,7 @@ ENDCLASS.
 
 CLASS lcl_report IMPLEMENTATION.
   METHOD run.
-    IF has_successor_list( ) = abap_false.
-      MESSAGE 'This system has no SAP successor list (S/4HANA 2022 or later has one). Use the AI skill from the repository instead.'
-              TYPE 'I'.
-      RETURN.
-    ENDIF.
-
-    IF p_json = abap_true.
-      download_all( ).
+    IF no_successor_list( ) = abap_true.
       RETURN.
     ENDIF.
 
@@ -1002,6 +1001,23 @@ CLASS lcl_report IMPLEMENTATION.
     DATA(ls_component) = VALUE #( lt_components[ component = 'S4CORE' ]
                                   DEFAULT VALUE #( lt_components[ component = 'SAP_BASIS' ] OPTIONAL ) ).
     rv_release = condense( |{ ls_component-component } { ls_component-release } SP{ ls_component-extrelease ALPHA = OUT }| ).
+  ENDMETHOD.
+
+
+  METHOD download_json.
+    IF no_successor_list( ) = abap_true.
+      RETURN.
+    ENDIF.
+    download_all( ).
+  ENDMETHOD.
+
+
+  METHOD no_successor_list.
+    rv_missing = xsdbool( has_successor_list( ) = abap_false ).
+    IF rv_missing = abap_true.
+      MESSAGE 'This system has no SAP successor list (S/4HANA 2022 or later has one). Use the AI skill from the repository instead.'
+              TYPE 'I'.
+    ENDIF.
   ENDMETHOD.
 
 
@@ -1656,25 +1672,31 @@ ENDCLASS.
 
 
 INITIALIZATION.
-  %_p_alv_%_app_%-text = 'Show on screen'.
   %_p_cds_%_app_%-text = 'CDS view'.
   %_p_obj_%_app_%-text = 'Other objects'.
   %_p_oname_%_app_%-text = 'Object name'.
   %_p_otype_%_app_%-text = 'Object type'.
-  %_p_json_%_app_%-text = 'Download JSON'.
   %_p_tab_%_app_%-text = 'Table fields to CDS'.
   %_p_table_%_app_%-text = 'Table'.
   %_s_field_%_app_%-text = 'Table fields'.
+  sscrfields-functxt_01 = VALUE smp_dyntxt( icon_id   = icon_export
+                                            icon_text = 'Download JSON'
+                                            quickinfo = 'Download all as JSON' ).
+
 
 AT SELECTION-SCREEN OUTPUT.
   LOOP AT SCREEN.
-    IF ( screen-group1 = 'TAB' AND ( p_obj = abap_true OR p_json = abap_true ) )
-    OR ( screen-group1 = 'OBJ' AND ( p_tab = abap_true OR p_json = abap_true ) )
-    OR ( screen-group1 = 'WHT' AND p_json = abap_true ).
+    IF ( screen-group1 = 'TAB' AND p_obj = abap_true )
+    OR ( screen-group1 = 'OBJ' AND p_tab = abap_true ).
       screen-active = '0'.
       MODIFY SCREEN.
     ENDIF.
   ENDLOOP.
+
+AT SELECTION-SCREEN.
+  IF sscrfields-ucomm = 'FC01'.
+    NEW lcl_report( )->download_json( ).
+  ENDIF.
 
 AT SELECTION-SCREEN ON VALUE-REQUEST FOR p_otype.
   NEW lcl_report( )->object_type_help( ).
