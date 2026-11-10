@@ -84,9 +84,12 @@ successors; the user's own file settles that.
 When the user's release differs, or they want their own extension fields, they
 can load their own data:
 
-1. Install the `ZCDS_FIELD_MAPPING` report from this repository with abapGit.
-2. Run it with **Download JSON** and save the file.
-3. Run `python3 scripts/import_mapping.py <file>`. The file carries its release;
+1. Install the `ZCDS_FIELD_MAPPING` report from this repository, with abapGit or
+   by pasting `standalone/zcds_field_mapping.abap` into a new report.
+2. Run it with **Download JSON**. The report asks where to save the file; any
+   folder works.
+3. Run `python3 scripts/import_mapping.py <path to the file>` from this skill's
+   folder, the copy the assistant loads. The file carries its release;
    `--release` only overrides it.
 
 The one file holds both the mapping and the successor list. The import replaces

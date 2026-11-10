@@ -94,13 +94,31 @@ These lists are filled from S/4HANA 2022 on. On S/4HANA 2020 they are empty: the
 
 `skill/cds-field-mapping` is an agent skill that answers the same questions in chat: ask "what do I use instead of `MARA-MATNR`?" or "what replaces `BAPI_PROCORD_GET_DETAIL`?" and it looks the answer up instead of guessing a name. It can also rewrite a simple `SELECT` on a classic table into one on the released view, with every renamed field aliased to its old name.
 
-It ships with the mapping of 294 pairs and 1,090 successors read from an S4CORE 109 SP1 system, standard objects and fields only, so it works without an SAP connection. To use your own release and your own extension fields, run the report with Download JSON and load the file:
+### Install the skill
 
-```bash
-python3 skill/cds-field-mapping/scripts/import_mapping.py core-data-services.json
-```
+Copy the `skill/cds-field-mapping` folder to wherever your assistant loads skills from, for example `~/.claude/skills/cds-field-mapping` for Claude Code. The scripts need Python 3 and nothing else.
 
-Copy the `skill/cds-field-mapping` folder to wherever your assistant loads skills from, for example `~/.claude/skills/` for Claude Code. The scripts need Python 3 and nothing else.
+### Data included in the repository
+
+The skill ships with data read from an **S/4HANA 2025 FPS01** system (`S4CORE 109 SP1`): the field mapping of 294 table to CDS pairs and 1,090 successors, standard SAP objects and fields only. It works with this data as it is, without an SAP connection and without running the report.
+
+### Update it to your own system
+
+Your release can have other views, other fields and other successors, and your system has its own extension fields. To make the skill answer for your system:
+
+1. Run `ZCDS_FIELD_MAPPING` in SE38 with **Download JSON**.
+2. The report asks where to save the file. Any folder on your PC works, for example `C:\Users\<you>\Downloads\core-data-services.json`.
+3. Load the file into the copy of the skill your assistant uses. With the install path above:
+
+   ```bash
+   python3 ~/.claude/skills/cds-field-mapping/scripts/import_mapping.py "C:\Users\<you>\Downloads\core-data-services.json"
+   ```
+
+   On Windows, `py -3` works in place of `python3`.
+
+The import copies the data into the skill's `references` folder, keeps the previous files with a `.bak` suffix and records the release from the file. The downloaded file is not needed afterwards. Because it can hold your own extension fields, keep it and the updated skill to yourself.
+
+On releases before S/4HANA 2022 the system has no successor list. The downloaded file then holds the field mapping only (from the pairs built into the report), and the skill keeps the 2025 successor list it shipped with.
 
 ## How it works
 
