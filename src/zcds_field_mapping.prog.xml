@@ -29,9 +29,33 @@
     </item>
     <item>
      <ID>S</ID>
+     <KEY>P_OBJ</KEY>
+     <ENTRY>        Other objects</ENTRY>
+     <LENGTH>21</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>P_ONAME</KEY>
+     <ENTRY>        Object name</ENTRY>
+     <LENGTH>19</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>P_OTYPE</KEY>
+     <ENTRY>        Object type</ENTRY>
+     <LENGTH>19</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
      <KEY>P_JSON</KEY>
      <ENTRY>        Download JSON</ENTRY>
      <LENGTH>21</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>P_TAB</KEY>
+     <ENTRY>        Table fields to CDS</ENTRY>
+     <LENGTH>27</LENGTH>
     </item>
     <item>
      <ID>S</ID>

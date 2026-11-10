@@ -27,7 +27,12 @@ No other dependency is needed.
 
 ## Use
 
-Run `ZCDS_FIELD_MAPPING` in SE38.
+Run `ZCDS_FIELD_MAPPING` in SE38. Pick what to look up first:
+
+- **Table fields to CDS**: the field-level mapping of a classic table to its successor views.
+- **Other objects**: the successor of any object SAP has replaced, for example a function module, class, data element or older CDS view.
+
+### Table fields to CDS
 
 | Input | Meaning |
 |---|---|
@@ -44,7 +49,30 @@ The Match column tells you how far to trust a row:
 - **Same column**: the view field reads this column.
 - **In expression**: the view field uses this column inside an expression, so the value can differ. In `I_PRODUCT`, `LastChangedByUser` returns `MARA-AENAM`, or `ERNAM` when `AENAM` is empty. Click **Show** in the How to use column to see the definition. In JSON these rows carry `"computed": true`, the `expression` and the view it is `definedIn`.
 
-The Release column appears only when a listed view is not released. SAP can name such a view as a successor: `EHEWAD_WA_TRRQLA` points to `I_WASTETRANSFERREQUESTHISTORY`, and reading that view gives the ATC finding "Usage of internal API". A view you enter yourself is not checked.
+The Release column appears only when a listed view is not released for ABAP Cloud. SAP can name such a view as a successor: `EHEWAD_WA_TRRQLA` points to `I_WASTETRANSFERREQUESTHISTORY`, and reading that view gives the ATC finding "Usage of internal API". A view you enter yourself is checked the same way when the system has the API state list (see below).
+
+### Other objects
+
+| Input | Meaning |
+|---|---|
+| Object name | Name of the object, with `*` as a wildcard. For a function module, give the function module, not its group. |
+| Object type | Optional filter, for example `FUNC`, `CLAS`, `INTF`, `DTEL`, `DDLS`, `TABL`. |
+| Show on screen | ALV list of the object, its state, its successor and whether the successor can be used in ABAP Cloud. |
+| Download JSON | Write all successors of the system to a file. |
+
+The ABAP Cloud column says whether the successor clears the ATC finding:
+
+- **Released**: released for ABAP Cloud development. Using it clears "Usage of APIs".
+- **Key user only**: released, but only for key user apps. ATC still reports it as an internal API. On an S/4HANA 2025 system `I_EWM_STORAGETYPE_2`, SAP's successor of `I_EWM_STORAGETYPE`, is one of these.
+- **Not released**: not released at all.
+
+When an object has no successor, the report says whether it is already released for ABAP Cloud or simply has no successor in SAP's list.
+
+### Where the successor list comes from
+
+Both modes read SAP's own successor and API state lists in the system (`ARS_W_API_SCCSSR`, `ARS_W_API_STATE`), contract C1, so the result matches your release and the check ATC runs with `releasedAPIDataSource = checkedSystem`. The list header shows the source.
+
+These lists are filled from S/4HANA 2022 on. On S/4HANA 2020 they are empty: the table mode then falls back to the pairs built into `ZCL_CDS_FIELD_MAPPING_PAIRS`, and the object mode tells you to look the object up in SAP's [objectReleaseInfo_PCELatest.json](https://github.com/SAP/abap-atc-cr-cv-s4hc/blob/main/src/objectReleaseInfo_PCELatest.json).
 
 ## Use with an AI assistant
 
@@ -60,7 +88,7 @@ Copy the `skill/cds-field-mapping` folder to wherever your assistant loads skill
 
 ## How it works
 
-1. `ZCL_CDS_FIELD_MAPPING_PAIRS` holds the table to CDS pairs from SAP's `objectReleaseInfo_PCELatest.json`.
+1. The table to CDS pairs come from the system's successor list. Where that list is empty, `ZCL_CDS_FIELD_MAPPING_PAIRS` supplies the pairs from SAP's `objectReleaseInfo_PCELatest.json`.
 2. For a view with a generated SQL view, the field-to-column resolution comes from `DD27S`, the dictionary's own record. Intermediate views are followed level by level, up to 10 levels. All branches of a `UNION` are tried.
 3. Computed fields and type-changing `CAST`s point at helper tables in `DD27S`. These are resolved from the view definition and confirmed against `DD03L`, or against the source view when the source is a view.
 4. View entities have no SQL view, so their definition is parsed through the XCO library, falling back to the DDL source.
@@ -71,6 +99,7 @@ Copy the `skill/cds-field-mapping` folder to wherever your assistant loads skill
 - A computed field can list several columns, one row each. The list says which columns it reads, not how it combines them.
 - A mapping means the view field reads that column. It does not prove that the view returns the same rows. Check the view's joins and filters before you replace a `SELECT`.
 - A pair is shown only if SAP's list names it. Use the CDS view input for anything else.
+- The object mode needs S/4HANA 2022 or later. Function modules are listed by their own name; SAP stores them under the function group.
 - The report reads your own system, so fields added to a view by your extensions or add-ons are listed too.
 - Reading `DD27S` needs classic ABAP. The report does not run in ABAP Cloud, on BTP or in a public cloud tenant.
 

@@ -4,11 +4,17 @@ REPORT zcds_field_mapping.
 
 DATA gv_field TYPE fieldname.
 
+PARAMETERS: p_tab  RADIOBUTTON GROUP what DEFAULT 'X' USER-COMMAND what,
+            p_obj  RADIOBUTTON GROUP what.
+SELECTION-SCREEN SKIP.
 PARAMETERS: p_alv  RADIOBUTTON GROUP out DEFAULT 'X' USER-COMMAND mode,
-            p_json RADIOBUTTON GROUP out,
-            p_table TYPE tabname MODIF ID alv.
-SELECT-OPTIONS s_field FOR gv_field NO INTERVALS MODIF ID alv.
-PARAMETERS p_cds TYPE ddlname MODIF ID alv.
+            p_json RADIOBUTTON GROUP out.
+SELECTION-SCREEN SKIP.
+PARAMETERS p_table TYPE tabname MODIF ID tab.
+SELECT-OPTIONS s_field FOR gv_field NO INTERVALS MODIF ID tab.
+PARAMETERS: p_cds   TYPE ddlname MODIF ID tab,
+            p_oname TYPE c LENGTH 40 MODIF ID obj,
+            p_otype TYPE c LENGTH 10 MODIF ID obj.
 
 
 CLASS lcl_pairs DEFINITION FINAL.
@@ -1096,13 +1102,71 @@ CLASS lcl_report DEFINITION FINAL.
            END OF ts_key,
            tt_key TYPE STANDARD TABLE OF ts_key WITH EMPTY KEY.
 
-    CONSTANTS: c_same_column   TYPE c LENGTH 13 VALUE 'Same column',
-               c_in_expression TYPE c LENGTH 13 VALUE 'In expression'.
+    TYPES: BEGIN OF ts_successor,
+             object_type    TYPE c LENGTH 10,
+             object_name    TYPE string,
+             object_state   TYPE c LENGTH 30,
+             successor_type TYPE c LENGTH 10,
+             successor_name TYPE string,
+             abap_cloud     TYPE c LENGTH 13,
+           END OF ts_successor,
+           tt_successor TYPE STANDARD TABLE OF ts_successor WITH EMPTY KEY.
 
-    DATA mt_rows      TYPE tt_row.
-    DATA mt_keys      TYPE tt_key.
-    DATA mv_note      TYPE string.
-    DATA mo_extractor TYPE REF TO lcl_mapping.
+    TYPES: BEGIN OF ts_api_key,
+             object_type     TYPE ars_w_api_state-object_type,
+             object_id       TYPE ars_w_api_state-object_id,
+             sub_object_name TYPE ars_w_api_state-sub_object_name,
+           END OF ts_api_key,
+           tt_api_key TYPE SORTED TABLE OF ts_api_key WITH UNIQUE KEY object_type object_id sub_object_name.
+
+    TYPES: BEGIN OF ts_api_state,
+             object_type     TYPE ars_w_api_state-object_type,
+             object_id       TYPE ars_w_api_state-object_id,
+             sub_object_name TYPE ars_w_api_state-sub_object_name,
+             release_state   TYPE ars_w_api_state-release_state,
+             cloud           TYPE ars_w_api_state-use_in_sap_cloud_platform,
+           END OF ts_api_state,
+           tt_api_state TYPE SORTED TABLE OF ts_api_state
+                        WITH NON-UNIQUE KEY object_type object_id sub_object_name.
+
+    TYPES tt_name_range TYPE RANGE OF ars_w_api_sccssr-sub_object_name.
+
+    CONSTANTS: c_same_column   TYPE c LENGTH 13 VALUE 'Same column',
+               c_in_expression TYPE c LENGTH 13 VALUE 'In expression',
+               c_released      TYPE c LENGTH 13 VALUE 'Released',
+               c_key_user_only TYPE c LENGTH 13 VALUE 'Key user only',
+               c_not_released  TYPE c LENGTH 13 VALUE 'Not released'.
+
+    DATA mt_rows       TYPE tt_row.
+    DATA mt_keys       TYPE tt_key.
+    DATA mt_successors TYPE tt_successor.
+    DATA mv_note       TYPE string.
+    DATA mv_source     TYPE string.
+    DATA mo_extractor  TYPE REF TO lcl_mapping.
+
+    METHODS all_pairs
+      RETURNING VALUE(rt_pairs) TYPE lcl_pairs=>tt_pair.
+
+    METHODS read_states
+      IMPORTING it_keys          TYPE tt_api_key
+      RETURNING VALUE(rt_states) TYPE tt_api_state.
+
+    METHODS availability
+      IMPORTING is_state       TYPE ts_api_state
+      RETURNING VALUE(rv_text) TYPE ts_successor-abap_cloud.
+
+    METHODS show_objects.
+
+    METHODS read_successors
+      IMPORTING it_names       TYPE tt_name_range
+      RETURNING VALUE(rt_rows) TYPE tt_successor.
+
+    METHODS explain_missing
+      IMPORTING it_names TYPE tt_name_range.
+
+    METHODS show_successors.
+
+    METHODS download_successors.
 
     METHODS selected_pairs
       RETURNING VALUE(rt_pairs) TYPE lcl_pairs=>tt_pair.
@@ -1150,16 +1214,27 @@ CLASS lcl_report DEFINITION FINAL.
     METHODS download_all.
 
     METHODS choose_file
+      IMPORTING iv_default     TYPE string
       RETURNING VALUE(rv_file) TYPE string.
 
     METHODS download
-      IMPORTING it_result TYPE lcl_mapping=>tt_view_map
-                iv_file   TYPE string.
+      IMPORTING iv_json    TYPE string
+                iv_file    TYPE string
+                iv_written TYPE string.
 ENDCLASS.
 
 
 CLASS lcl_report IMPLEMENTATION.
   METHOD run.
+    IF p_obj = abap_true.
+      IF p_json = abap_true.
+        download_successors( ).
+      ELSE.
+        show_objects( ).
+      ENDIF.
+      RETURN.
+    ENDIF.
+
     IF p_json = abap_true.
       download_all( ).
       RETURN.
@@ -1188,14 +1263,223 @@ CLASS lcl_report IMPLEMENTATION.
 
 
   METHOD download_all.
-    DATA(lv_file) = choose_file( ).
+    DATA(lv_file) = choose_file( `core-data-services.json` ).
     IF lv_file IS INITIAL.
       RETURN.
     ENDIF.
 
     mo_extractor = NEW #( ).
-    download( it_result = extract_pairs( lcl_pairs=>get( ) )
-              iv_file   = lv_file ).
+    DATA(lt_result) = extract_pairs( all_pairs( ) ).
+    download( iv_json    = mo_extractor->to_json( lt_result )
+              iv_file    = lv_file
+              iv_written = |{ lines( lt_result ) } views, pairs from { mv_source },| ).
+  ENDMETHOD.
+
+
+  METHOD all_pairs.
+    SELECT FROM ars_w_api_sccssr
+      FIELDS object_id, successor_object_name
+      WHERE object_type            = 'TABL'
+        AND successor_object_type  = 'DDLS'
+        AND compatibility_contract = 'C1'
+      INTO TABLE @DATA(lt_successors).
+    IF lt_successors IS INITIAL.
+      mv_source = `the built-in list`.
+      rt_pairs = lcl_pairs=>get( ).
+      RETURN.
+    ENDIF.
+
+    mv_source = `this system`.
+    DATA(lt_states) = read_states( VALUE #( FOR ls_key IN lt_successors
+                                            ( object_type     = 'DDLS'
+                                              object_id       = ls_key-successor_object_name
+                                              sub_object_name = ls_key-successor_object_name ) ) ).
+    LOOP AT lt_successors INTO DATA(ls_successor).
+      DATA(ls_state) = VALUE #( lt_states[ object_type     = 'DDLS'
+                                           object_id       = ls_successor-successor_object_name
+                                           sub_object_name = ls_successor-successor_object_name ] OPTIONAL ).
+      INSERT VALUE #( table_name = ls_successor-object_id
+                      cds_name   = ls_successor-successor_object_name
+                      released   = xsdbool( availability( ls_state ) = c_released ) )
+             INTO TABLE rt_pairs.
+    ENDLOOP.
+    SORT rt_pairs BY table_name cds_name.
+    DELETE ADJACENT DUPLICATES FROM rt_pairs COMPARING table_name cds_name.
+  ENDMETHOD.
+
+
+  METHOD read_states.
+    IF it_keys IS INITIAL.
+      RETURN.
+    ENDIF.
+
+    SELECT FROM @it_keys AS api_key
+      INNER JOIN ars_w_api_state AS state
+        ON  state~object_type     = api_key~object_type
+        AND state~object_id       = api_key~object_id
+        AND state~sub_object_name = api_key~sub_object_name
+      FIELDS state~object_type, state~object_id, state~sub_object_name,
+             state~release_state,
+             state~use_in_sap_cloud_platform AS cloud
+      WHERE state~compatibility_contract = 'C1'
+      INTO CORRESPONDING FIELDS OF TABLE @rt_states.
+  ENDMETHOD.
+
+
+  METHOD availability.
+    rv_text = COND #( WHEN is_state-release_state = 'RELEASED' AND is_state-cloud = abap_true
+                        THEN c_released
+                      WHEN is_state-release_state = 'RELEASED'
+                        THEN c_key_user_only
+                      ELSE c_not_released ).
+  ENDMETHOD.
+
+
+  METHOD show_objects.
+    IF p_oname IS INITIAL.
+      MESSAGE 'Enter an object name' TYPE 'S' DISPLAY LIKE 'E'.
+      RETURN.
+    ENDIF.
+
+    DATA(lv_name) = to_upper( condense( p_oname ) ).
+    DATA(lt_names) = VALUE tt_name_range( ( sign   = 'I'
+                                            option = COND #( WHEN lv_name CA '*+' THEN 'CP' ELSE 'EQ' )
+                                            low    = lv_name ) ).
+    mt_successors = read_successors( lt_names ).
+    IF p_otype IS NOT INITIAL.
+      DELETE mt_successors WHERE object_type <> p_otype.
+    ENDIF.
+
+    IF mt_successors IS INITIAL.
+      explain_missing( lt_names ).
+      RETURN.
+    ENDIF.
+    show_successors( ).
+  ENDMETHOD.
+
+
+  METHOD read_successors.
+    SELECT FROM ars_w_api_sccssr
+      FIELDS object_type, object_id, sub_object_type, sub_object_name,
+             successor_object_type, successor_object_name,
+             successor_sub_object_type, successor_sub_object_name
+      WHERE compatibility_contract = 'C1'
+        AND ( object_id IN @it_names OR sub_object_name IN @it_names )
+      INTO TABLE @DATA(lt_links).
+    IF lt_links IS INITIAL.
+      RETURN.
+    ENDIF.
+
+    DATA(lt_keys) = VALUE tt_api_key( ).
+    LOOP AT lt_links INTO DATA(ls_link).
+      INSERT VALUE #( object_type     = ls_link-object_type
+                      object_id       = ls_link-object_id
+                      sub_object_name = ls_link-sub_object_name ) INTO TABLE lt_keys.
+      INSERT VALUE #( object_type     = ls_link-successor_object_type
+                      object_id       = ls_link-successor_object_name
+                      sub_object_name = ls_link-successor_sub_object_name ) INTO TABLE lt_keys.
+    ENDLOOP.
+    DATA(lt_states) = read_states( lt_keys ).
+
+    LOOP AT lt_links INTO ls_link.
+      DATA(ls_source) = VALUE #( lt_states[ object_type     = ls_link-object_type
+                                            object_id       = ls_link-object_id
+                                            sub_object_name = ls_link-sub_object_name ] OPTIONAL ).
+      DATA(ls_target) = VALUE #( lt_states[ object_type     = ls_link-successor_object_type
+                                            object_id       = ls_link-successor_object_name
+                                            sub_object_name = ls_link-successor_sub_object_name ] OPTIONAL ).
+      INSERT VALUE #( object_type    = COND #( WHEN ls_link-sub_object_type = 'CDS_STOB' OR ls_link-sub_object_type IS INITIAL
+                                                 THEN ls_link-object_type
+                                               ELSE ls_link-sub_object_type )
+                      object_name    = COND #( WHEN ls_link-sub_object_name IS INITIAL
+                                                 THEN ls_link-object_id
+                                               ELSE ls_link-sub_object_name )
+                      object_state   = COND #( WHEN ls_source-release_state IS INITIAL
+                                                 THEN 'NO ENTRY'
+                                               ELSE ls_source-release_state )
+                      successor_type = COND #( WHEN ls_link-successor_sub_object_type = 'CDS_STOB'
+                                                 OR ls_link-successor_sub_object_type IS INITIAL
+                                                 THEN ls_link-successor_object_type
+                                               ELSE ls_link-successor_sub_object_type )
+                      successor_name = COND #( WHEN ls_link-successor_sub_object_name IS INITIAL
+                                                 THEN ls_link-successor_object_name
+                                               ELSE ls_link-successor_sub_object_name )
+                      abap_cloud     = availability( ls_target ) )
+             INTO TABLE rt_rows.
+    ENDLOOP.
+    SORT rt_rows BY object_type object_name successor_name.
+  ENDMETHOD.
+
+
+  METHOD explain_missing.
+    SELECT SINGLE FROM ars_w_api_sccssr
+      FIELDS object_id
+      WHERE compatibility_contract = 'C1'
+      INTO @DATA(lv_any).
+    IF sy-subrc <> 0.
+      MESSAGE 'This system has no successor list (it needs S/4HANA 2022 or later). See SAP''s objectReleaseInfo_PCELatest.json.'
+              TYPE 'S' DISPLAY LIKE 'E'.
+      RETURN.
+    ENDIF.
+
+    SELECT FROM ars_w_api_state
+      FIELDS release_state, use_in_sap_cloud_platform AS cloud
+      WHERE compatibility_contract = 'C1'
+        AND ( object_id IN @it_names OR sub_object_name IN @it_names )
+      INTO TABLE @DATA(lt_found).
+
+    DATA(lv_name) = condense( p_oname ).
+    IF line_exists( lt_found[ release_state = 'RELEASED' cloud = abap_true ] ).
+      MESSAGE |{ lv_name } is released for ABAP Cloud. No successor is needed.| TYPE 'S'.
+    ELSEIF lt_found IS INITIAL.
+      MESSAGE |{ lv_name } is not in this system's API list, and SAP names no successor for it.|
+              TYPE 'S' DISPLAY LIKE 'E'.
+    ELSE.
+      MESSAGE |{ lv_name } ({ lt_found[ 1 ]-release_state }): SAP names no successor object for it.|
+              TYPE 'S' DISPLAY LIKE 'E'.
+    ENDIF.
+  ENDMETHOD.
+
+
+  METHOD show_successors.
+    TRY.
+        cl_salv_table=>factory( IMPORTING r_salv_table = DATA(lo_alv)
+                                CHANGING  t_table      = mt_successors ).
+        lo_alv->get_functions( )->set_all( ).
+        lo_alv->get_display_settings( )->set_list_header(
+          CONV #( |Successors of { condense( p_oname ) }, read from this system| ) ).
+
+        DATA(lo_columns) = lo_alv->get_columns( ).
+        lo_columns->set_optimize( ).
+        set_heading( io_columns = lo_columns iv_column = 'OBJECT_TYPE'    iv_text = 'Type' ).
+        set_heading( io_columns = lo_columns iv_column = 'OBJECT_NAME'    iv_text = 'Object' ).
+        set_heading( io_columns = lo_columns iv_column = 'OBJECT_STATE'   iv_text = 'State' ).
+        set_heading( io_columns = lo_columns iv_column = 'SUCCESSOR_TYPE' iv_text = 'Succ. type' ).
+        set_heading( io_columns = lo_columns iv_column = 'SUCCESSOR_NAME' iv_text = 'Successor' ).
+        set_heading( io_columns = lo_columns iv_column = 'ABAP_CLOUD'     iv_text = 'ABAP Cloud' ).
+        lo_alv->display( ).
+      CATCH cx_salv_error INTO DATA(lx_error).
+        MESSAGE lx_error TYPE 'S' DISPLAY LIKE 'E'.
+    ENDTRY.
+  ENDMETHOD.
+
+
+  METHOD download_successors.
+    DATA(lt_rows) = read_successors( VALUE #( ) ).
+    IF lt_rows IS INITIAL.
+      MESSAGE 'This system has no successor list (it needs S/4HANA 2022 or later).' TYPE 'S' DISPLAY LIKE 'E'.
+      RETURN.
+    ENDIF.
+
+    DATA(lv_file) = choose_file( `successors.json` ).
+    IF lv_file IS INITIAL.
+      RETURN.
+    ENDIF.
+
+    download( iv_json    = /ui2/cl_json=>serialize( data        = lt_rows
+                                                    pretty_name = /ui2/cl_json=>pretty_mode-camel_case )
+              iv_file    = lv_file
+              iv_written = |{ lines( lt_rows ) } successors| ).
   ENDMETHOD.
 
 
@@ -1215,14 +1499,21 @@ CLASS lcl_report IMPLEMENTATION.
 
 
   METHOD selected_pairs.
-    DATA(lt_all) = lcl_pairs=>get( ).
+    DATA(lt_all) = all_pairs( ).
     DATA(lv_table) = to_upper( p_table ).
 
     IF p_cds IS NOT INITIAL.
       DATA(lv_cds) = to_upper( p_cds ).
+      DATA(lv_released) = VALUE #( lt_all[ cds_name = lv_cds ]-released DEFAULT abap_true ).
+      IF mv_source = `this system`.
+        DATA(lt_states) = read_states( VALUE #( ( object_type     = 'DDLS'
+                                                  object_id       = lv_cds
+                                                  sub_object_name = lv_cds ) ) ).
+        lv_released = xsdbool( availability( VALUE #( lt_states[ 1 ] OPTIONAL ) ) = c_released ).
+      ENDIF.
       rt_pairs = VALUE #( ( table_name = lv_table
                             cds_name   = lv_cds
-                            released   = VALUE #( lt_all[ cds_name = lv_cds ]-released DEFAULT abap_true ) ) ).
+                            released   = lv_released ) ).
       RETURN.
     ENDIF.
 
@@ -1331,7 +1622,9 @@ CLASS lcl_report IMPLEMENTATION.
         cl_salv_table=>factory( IMPORTING r_salv_table = DATA(lo_alv)
                                 CHANGING  t_table      = mt_rows ).
         lo_alv->get_functions( )->set_all( ).
-        lo_alv->get_display_settings( )->set_list_header( CONV #( mv_note ) ).
+        lo_alv->get_display_settings( )->set_list_header(
+          CONV #( COND string( WHEN mv_note IS INITIAL THEN |Pairs from { mv_source }|
+                               ELSE |{ mv_note }. Pairs from { mv_source }| ) ) ).
 
         DATA(lo_columns) = lo_alv->get_columns( ).
         lo_columns->set_optimize( ).
@@ -1514,7 +1807,7 @@ CLASS lcl_report IMPLEMENTATION.
 
 
   METHOD download.
-    DATA(lv_content) = cl_abap_codepage=>convert_to( mo_extractor->to_json( it_result ) ).
+    DATA(lv_content) = cl_abap_codepage=>convert_to( iv_json ).
     DATA(lt_binary) = cl_bcs_convert=>xstring_to_solix( lv_content ).
 
     cl_gui_frontend_services=>gui_download(
@@ -1528,7 +1821,7 @@ CLASS lcl_report IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    MESSAGE |{ lines( it_result ) } views written to { iv_file }| TYPE 'S'.
+    MESSAGE |{ iv_written } written to { iv_file }| TYPE 'S'.
   ENDMETHOD.
 
 
@@ -1538,7 +1831,7 @@ CLASS lcl_report IMPLEMENTATION.
     DATA lv_fullpath TYPE string.
 
     cl_gui_frontend_services=>file_save_dialog(
-      EXPORTING default_file_name = `core-data-services.json`
+      EXPORTING default_file_name = iv_default
                 default_extension = `json`
       CHANGING  filename          = lv_filename
                 path              = lv_path
@@ -1554,13 +1847,18 @@ ENDCLASS.
 INITIALIZATION.
   %_p_alv_%_app_%-text = 'Show on screen'.
   %_p_cds_%_app_%-text = 'CDS view'.
+  %_p_obj_%_app_%-text = 'Other objects'.
+  %_p_oname_%_app_%-text = 'Object name'.
+  %_p_otype_%_app_%-text = 'Object type'.
   %_p_json_%_app_%-text = 'Download JSON'.
+  %_p_tab_%_app_%-text = 'Table fields to CDS'.
   %_p_table_%_app_%-text = 'Table'.
   %_s_field_%_app_%-text = 'Table fields'.
 
 AT SELECTION-SCREEN OUTPUT.
   LOOP AT SCREEN.
-    IF screen-group1 = 'ALV' AND p_json = abap_true.
+    IF ( screen-group1 = 'TAB' AND ( p_obj = abap_true OR p_json = abap_true ) )
+    OR ( screen-group1 = 'OBJ' AND ( p_tab = abap_true OR p_json = abap_true ) ).
       screen-active = '0'.
       MODIFY SCREEN.
     ENDIF.
