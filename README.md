@@ -81,7 +81,7 @@ The Release column appears only when a listed view is not released for ABAP Clou
 | Input | Meaning |
 |---|---|
 | Object name | Name of the object, with `*` as a wildcard. For a function module, give the function module, not its group. |
-| Object type | Optional filter, for example `FUNC`, `CLAS`, `INTF`, `DTEL`, `DDLS`, `TABL`. |
+| Object type | Optional filter, for example `FUNC`, `CLAS`, `INTF`, `DTEL`, `DDLS`, `TABL`. Press F4 for the types that have successors in your system. |
 
 The list shows the object, its state, its successor and whether the successor can be used in ABAP Cloud.
 

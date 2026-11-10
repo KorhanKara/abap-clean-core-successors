@@ -18,6 +18,8 @@ CLASS lcl_report DEFINITION FINAL.
   PUBLIC SECTION.
     METHODS run.
 
+    METHODS object_type_help.
+
   PRIVATE SECTION.
     TYPES: BEGIN OF ts_row,
              table_name  TYPE tabname,
@@ -313,6 +315,59 @@ CLASS lcl_report IMPLEMENTATION.
                       WHEN is_state-release_state = 'RELEASED'
                         THEN c_key_user_only
                       ELSE c_not_released ).
+  ENDMETHOD.
+
+
+  METHOD object_type_help.
+    TYPES: BEGIN OF ts_type,
+             object_type TYPE c LENGTH 10,
+             description TYPE c LENGTH 40,
+           END OF ts_type.
+    DATA lt_types TYPE STANDARD TABLE OF ts_type WITH EMPTY KEY.
+
+    SELECT object_type, sub_object_type
+      FROM ars_w_api_sccssr
+      WHERE compatibility_contract = 'C1'
+      INTO TABLE @DATA(lt_links).
+
+    LOOP AT lt_links INTO DATA(ls_link).
+      DATA(lv_type) = CONV ts_type-object_type( COND #( WHEN ls_link-sub_object_type = 'CDS_STOB'
+                                                          OR ls_link-sub_object_type IS INITIAL
+                                                          THEN ls_link-object_type
+                                                        ELSE ls_link-sub_object_type ) ).
+      INSERT VALUE #( object_type = lv_type
+                      description = SWITCH #( lv_type
+                                               WHEN 'FUNC'     THEN 'Function module'
+                                               WHEN 'CLAS'     THEN 'Class'
+                                               WHEN 'INTF'     THEN 'Interface'
+                                               WHEN 'DTEL'     THEN 'Data element'
+                                               WHEN 'DOMA'     THEN 'Domain'
+                                               WHEN 'DDLS'     THEN 'CDS view'
+                                               WHEN 'TABL'     THEN 'Table'
+                                               WHEN 'TTYP'     THEN 'Table type'
+                                               WHEN 'BADI_DEF' THEN 'BAdI definition'
+                                               WHEN 'SUSO'     THEN 'Authorization object'
+                                               WHEN 'CHKV'     THEN 'ATC check variant'
+                                               WHEN 'IWSV'     THEN 'Gateway service' ) )
+             INTO TABLE lt_types.
+    ENDLOOP.
+    SORT lt_types BY object_type.
+    DELETE ADJACENT DUPLICATES FROM lt_types COMPARING object_type.
+
+    CALL FUNCTION 'F4IF_INT_TABLE_VALUE_REQUEST'
+      EXPORTING
+        retfield    = 'OBJECT_TYPE'
+        dynpprog    = sy-repid
+        dynpnr      = sy-dynnr
+        dynprofield = 'P_OTYPE'
+        value_org   = 'S'
+      TABLES
+        value_tab   = lt_types
+      EXCEPTIONS
+        OTHERS      = 1.
+    IF sy-subrc <> 0.
+      MESSAGE 'The value list could not be shown' TYPE 'S' DISPLAY LIKE 'E'.
+    ENDIF.
   ENDMETHOD.
 
 
@@ -803,6 +858,9 @@ AT SELECTION-SCREEN OUTPUT.
       MODIFY SCREEN.
     ENDIF.
   ENDLOOP.
+
+AT SELECTION-SCREEN ON VALUE-REQUEST FOR p_otype.
+  NEW lcl_report( )->object_type_help( ).
 
 START-OF-SELECTION.
   NEW lcl_report( )->run( ).
