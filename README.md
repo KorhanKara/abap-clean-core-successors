@@ -83,7 +83,7 @@ The Release column appears only when a listed view is not released for ABAP Clou
 | Object name | Name of the object, with `*` as a wildcard. For a function module, give the function module, not its group. Empty lists every successor, or every successor of the object type you choose. |
 | Object type | Optional filter, for example `FUNC`, `CLAS`, `INTF`, `DTEL`, `DDLS`, `TABL`. Press F4 for the types that have successors in your system. |
 
-The list shows the object, its state, its successor and whether the successor can be used in ABAP Cloud. Click an object type to see what it is.
+The list shows the object and its type with a short text, its state, its successor and whether the successor can be used in ABAP Cloud.
 
 The ABAP Cloud column says whether the successor clears the ATC finding:
 

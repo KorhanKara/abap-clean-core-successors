@@ -785,9 +785,11 @@ CLASS lcl_report DEFINITION FINAL.
 
     TYPES: BEGIN OF ts_successor,
              object_type    TYPE c LENGTH 10,
+             type_text      TYPE as4text,
              object_name    TYPE string,
              object_state   TYPE c LENGTH 30,
              successor_type TYPE c LENGTH 10,
+             succ_type_text TYPE as4text,
              successor_name TYPE string,
              abap_cloud     TYPE c LENGTH 13,
            END OF ts_successor,
@@ -852,9 +854,6 @@ CLASS lcl_report DEFINITION FINAL.
     METHODS type_texts
       IMPORTING it_types        TYPE tt_type_list
       RETURNING VALUE(rt_texts) TYPE tt_type_text.
-
-    METHODS on_type_click FOR EVENT link_click OF cl_salv_events_table
-      IMPORTING row column.
 
     METHODS display_type
       IMPORTING iv_type        TYPE trobjtype
@@ -1108,21 +1107,6 @@ CLASS lcl_report IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD on_type_click.
-    DATA(ls_row) = VALUE ts_successor( mt_successors[ row ] OPTIONAL ).
-    DATA(lv_type) = CONV trobjtype( COND #( WHEN column = 'SUCCESSOR_TYPE' THEN ls_row-successor_type
-                                            ELSE ls_row-object_type ) ).
-    IF lv_type IS INITIAL.
-      RETURN.
-    ENDIF.
-
-    DATA(lt_texts) = type_texts( VALUE #( ( lv_type ) ) ).
-    DATA(lv_text) = VALUE #( lt_texts[ object_type = lv_type ]-text OPTIONAL ).
-    MESSAGE COND string( WHEN lv_text IS INITIAL THEN |{ lv_type }: no description in this system|
-                         ELSE |{ lv_type }: { lv_text }| ) TYPE 'I'.
-  ENDMETHOD.
-
-
   METHOD display_type.
     rv_type = COND #( WHEN iv_sub_type = 'BADI_DEF'                         THEN 'BADI'
                       WHEN iv_sub_type IS INITIAL OR strlen( iv_sub_type ) > 4 THEN iv_type
@@ -1251,6 +1235,14 @@ CLASS lcl_report IMPLEMENTATION.
              INTO TABLE rt_rows.
     ENDLOOP.
     SORT rt_rows BY object_type object_name successor_name.
+
+    DATA(lt_texts) = type_texts( VALUE #( FOR ls_row IN rt_rows
+                                          ( CONV #( ls_row-object_type ) )
+                                          ( CONV #( ls_row-successor_type ) ) ) ).
+    LOOP AT rt_rows ASSIGNING FIELD-SYMBOL(<ls_row>).
+      <ls_row>-type_text      = VALUE #( lt_texts[ object_type = CONV #( <ls_row>-object_type ) ]-text OPTIONAL ).
+      <ls_row>-succ_type_text = VALUE #( lt_texts[ object_type = CONV #( <ls_row>-successor_type ) ]-text OPTIONAL ).
+    ENDLOOP.
   ENDMETHOD.
 
 
@@ -1291,11 +1283,8 @@ CLASS lcl_report IMPLEMENTATION.
         set_heading( io_columns = lo_columns iv_column = 'SUCCESSOR_TYPE' iv_text = 'Succ. type' ).
         set_heading( io_columns = lo_columns iv_column = 'SUCCESSOR_NAME' iv_text = 'Successor' ).
         set_heading( io_columns = lo_columns iv_column = 'ABAP_CLOUD'     iv_text = 'ABAP Cloud' ).
-        CAST cl_salv_column_table( lo_columns->get_column( 'OBJECT_TYPE' )
-          )->set_cell_type( if_salv_c_cell_type=>hotspot ).
-        CAST cl_salv_column_table( lo_columns->get_column( 'SUCCESSOR_TYPE' )
-          )->set_cell_type( if_salv_c_cell_type=>hotspot ).
-        SET HANDLER on_type_click FOR lo_alv->get_event( ).
+        set_heading( io_columns = lo_columns iv_column = 'TYPE_TEXT'      iv_text = 'Type text' ).
+        set_heading( io_columns = lo_columns iv_column = 'SUCC_TYPE_TEXT' iv_text = 'Succ. text' ).
         lo_alv->display( ).
       CATCH cx_salv_error INTO DATA(lx_error).
         MESSAGE lx_error TYPE 'S' DISPLAY LIKE 'E'.
