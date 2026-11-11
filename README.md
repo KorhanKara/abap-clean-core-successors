@@ -25,6 +25,8 @@ The report reads SAP's own successor list from the system (`ARS_W_API_SCCSSR` an
 
 The report does not carry a list of its own on purpose: a built-in list would hold SAP's latest successors, not the ones of your release, and would look more certain than it is.
 
+Tested on S/4HANA 2025 FPS01 (`S4CORE 109 SP1`). On S/4HANA 2022 the successor list was checked in the database, but the report has not been run there yet.
+
 ## Install
 
 Two ways, same code:
@@ -140,14 +142,6 @@ On releases before S/4HANA 2022 the report does not run, so the skill's bundled 
 - Function modules are listed by their own name; SAP stores them under the function group.
 - The report reads your own system, so fields added to a view by your extensions or add-ons are listed too.
 - Reading `DD27S` needs classic ABAP. The report does not run in ABAP Cloud, on BTP or in a public cloud tenant.
-
-## Results and tested releases
-
-| Release | Result |
-|---|---|
-| S4CORE 109 SP1, SAP_BASIS 816 | Full run with Download JSON: 294 pairs read from the system, 234 views, 10,004 standard CDS fields. 7,358 read one column, 280 use columns in an expression. 1,090 successors: 928 released for ABAP Cloud, 151 for key user apps only, 11 not released. |
-| S4CORE 107, SAP_BASIS 757 (S/4HANA 2022) | The successor list holds 204 table to CDS pairs (database read). The report was not run. |
-| S4CORE 105, SAP_BASIS 755 (S/4HANA 2020) | The successor list holds no table to CDS pairs (database read), so the report stops and points to the AI skill. |
 
 ## Development
 
