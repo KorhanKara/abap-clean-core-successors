@@ -967,6 +967,14 @@ CLASS lcl_report IMPLEMENTATION.
       RETURN.
     ENDIF.
 
+    DATA(ls_unreleased) = VALUE #( lt_pairs[ released = abap_false ] OPTIONAL ).
+    DELETE lt_pairs WHERE released = abap_false.
+    IF lt_pairs IS INITIAL.
+      MESSAGE |{ ls_unreleased-cds_name } is not released for ABAP Cloud. Reading it would not clear the ATC finding.|
+              TYPE 'I'.
+      RETURN.
+    ENDIF.
+
     mo_extractor = NEW #( ).
     fill_rows( extract_pairs( lt_pairs ) ).
     show_rows( ).
@@ -1192,6 +1200,19 @@ CLASS lcl_report IMPLEMENTATION.
       DELETE mt_successors WHERE object_type <> p_otype.
     ENDIF.
 
+    DATA(ls_unreleased) = VALUE #( mt_successors[ abap_cloud = c_key_user_only ] OPTIONAL ).
+    IF ls_unreleased IS INITIAL.
+      ls_unreleased = VALUE #( mt_successors[ abap_cloud = c_not_released ] OPTIONAL ).
+    ENDIF.
+    DELETE mt_successors WHERE abap_cloud <> c_released.
+
+    IF mt_successors IS INITIAL AND ls_unreleased IS NOT INITIAL.
+      MESSAGE |SAP names { ls_unreleased-successor_name } for { ls_unreleased-object_name }, but it is not released for ABAP Cloud|
+           && |{ COND string( WHEN ls_unreleased-abap_cloud = c_key_user_only THEN ` (key user apps only)` ) }.|
+           && | Using it would not clear the ATC finding.| TYPE 'I'.
+      RETURN.
+    ENDIF.
+
     IF mt_successors IS INITIAL.
       IF lv_name IS INITIAL.
         MESSAGE |No successors found for type { p_otype }| TYPE 'S' DISPLAY LIKE 'E'.
@@ -1298,7 +1319,7 @@ CLASS lcl_report IMPLEMENTATION.
         set_heading( io_columns = lo_columns iv_column = 'OBJECT_STATE'   iv_text = 'State' ).
         set_heading( io_columns = lo_columns iv_column = 'SUCCESSOR_TYPE' iv_text = 'Succ. type' ).
         set_heading( io_columns = lo_columns iv_column = 'SUCCESSOR_NAME' iv_text = 'Successor' ).
-        set_heading( io_columns = lo_columns iv_column = 'ABAP_CLOUD'     iv_text = 'ABAP Cloud' ).
+        lo_columns->get_column( 'ABAP_CLOUD' )->set_technical( ).
         set_heading( io_columns = lo_columns iv_column = 'TYPE_TEXT'      iv_text = 'Type text' ).
         set_heading( io_columns = lo_columns iv_column = 'SUCC_TYPE_TEXT' iv_text = 'Succ. text' ).
         CAST cl_salv_column_table( lo_columns->get_column( 'OBJECT_NAME' ) )->set_key( ).
@@ -1459,9 +1480,7 @@ CLASS lcl_report IMPLEMENTATION.
         set_heading( io_columns = lo_columns iv_column = 'CDS_FIELD'   iv_text = 'CDS field' ).
         set_heading( io_columns = lo_columns iv_column = 'MATCH_TYPE'  iv_text = 'Match' ).
         set_heading( io_columns = lo_columns iv_column = 'HOW_TO_USE'  iv_text = 'How to use' ).
-        set_heading( io_columns = lo_columns iv_column = 'RELEASE'     iv_text = 'Release' ).
-        lo_columns->get_column( 'RELEASE' )->set_visible(
-          xsdbool( line_exists( mt_rows[ release = 'Not released' ] ) ) ).
+        lo_columns->get_column( 'RELEASE' )->set_technical( ).
         lo_columns->get_column( 'COVERED' )->set_technical( ).
         lo_columns->get_column( 'EXPRESSION' )->set_technical( ).
         lo_columns->get_column( 'DEFINED_IN' )->set_technical( ).

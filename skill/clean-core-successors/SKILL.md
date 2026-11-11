@@ -65,10 +65,13 @@ view SAP names is not usable.
 - **A mapping is not proof of the same rows.** The view can filter or join.
   Present rewrites as drafts to compile and test, and name the release the data
   was read from (`dataRelease` in the output) when it matters.
-- **`abapCloud` decides whether a successor helps.** `Released` clears the ATC
-  finding "Usage of APIs". `Key user only` is released for key user apps but not
-  for ABAP Cloud, so ATC still reports it as an internal API; say so instead of
-  recommending it. `Not released` is not usable either.
+- **Recommend only successors that clear the ATC finding.** `--object` marks each
+  row with `clearsAtcFinding`; only `abapCloud: Released` is true. A `Key user
+  only` successor is released for key user apps but not for ABAP Cloud, so ATC
+  still reports it as an internal API; `Not released` is not usable either. When
+  asked about such an object, name SAP's successor but say plainly that using it
+  would not clear the ATC finding, and do not put it into a rewrite. The report's
+  screen hides these successors for the same reason.
 - **A function module has no field mapping.** For `--object` results, give the
   successor and its type; for a CDS successor of a table, continue with `--table`.
 - **No row for an object means SAP's list names no successor.** It does not mean

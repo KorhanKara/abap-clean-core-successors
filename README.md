@@ -74,7 +74,7 @@ The Match column tells you how far to trust a row:
 - **Same column**: the view field reads this column.
 - **In expression**: the view field uses this column inside an expression, so the value can differ. In `I_PRODUCT`, `LastChangedByUser` returns `MARA-AENAM`, or `ERNAM` when `AENAM` is empty. Click **Show** in the How to use column to see the definition. In JSON these rows carry `"computed": true`, the `expression` and the view it is `definedIn`.
 
-The Release column appears only when a listed view is not released for ABAP Cloud. SAP can name such a view as a successor: `EHEWAD_WA_TRRQLA` points to `I_WASTETRANSFERREQUESTHISTORY`, and reading that view gives the ATC finding "Usage of internal API". A view you enter yourself is checked the same way.
+The list only shows views released for ABAP Cloud, because only those clear the ATC finding. SAP can name a view that is not: `EHEWAD_WA_TRRQLA` points to `I_WASTETRANSFERREQUESTHISTORY`, and reading that view gives the ATC finding "Usage of internal API". The report leaves such a view out and tells you so when it is the only successor. A view you enter yourself is checked the same way.
 
 ### Other objects
 
@@ -83,13 +83,9 @@ The Release column appears only when a listed view is not released for ABAP Clou
 | Object name | Name of the object, with `*` as a wildcard. For a function module, give the function module, not its group. Empty lists every successor, or every successor of the object type you choose. |
 | Object type | Optional filter, for example `FUNC`, `CLAS`, `INTF`, `DTEL`, `DDLS`, `TABL`. Press F4 for the types that have successors in your system. |
 
-The list shows the object and its type with a short text, its state, its successor and whether the successor can be used in ABAP Cloud.
+The list shows the object and its type with a short text, its state and its successor. It only lists successors released for ABAP Cloud, because only those clear the ATC finding "Usage of APIs".
 
-The ABAP Cloud column says whether the successor clears the ATC finding:
-
-- **Released**: released for ABAP Cloud development. Using it clears "Usage of APIs".
-- **Key user only**: released, but only for key user apps. ATC still reports it as an internal API. On an S/4HANA 2025 system `I_EWM_STORAGETYPE_2`, SAP's successor of `I_EWM_STORAGETYPE`, is one of these.
-- **Not released**: not released at all.
+SAP also names successors that do not: some are released for key user apps only, a few are not released at all. On an S/4HANA 2025 system `I_EWM_STORAGETYPE_2`, SAP's successor of `I_EWM_STORAGETYPE`, is released for key user apps only, and reading it still gives "Usage of internal API". The report leaves these out of the list; when such a successor is the only one, it tells you which one and why it does not help. The JSON file and the AI skill keep them, marked with `abapCloud`, so you can still see what SAP named.
 
 When an object has no successor, the report says whether it is already released for ABAP Cloud or simply has no successor in SAP's list.
 

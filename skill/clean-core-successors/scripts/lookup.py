@@ -246,8 +246,12 @@ def main():
         if rows is None:
             print(json.dumps({"error": "references/successors.json is missing"}, indent=2))
             sys.exit(1)
+        for row in rows:
+            row["clearsAtcFinding"] = row.get("abapCloud") == "Released"
+        rows.sort(key=lambda r: not r["clearsAtcFinding"])
         print(json.dumps({"object": args.object.upper(), "dataRelease": data_release("successors"),
-                          "note": "abapCloud: Released clears the ATC finding; Key user only and Not released do not.",
+                          "note": "Recommend only successors with clearsAtcFinding true. Show the others only "
+                                  "with a warning that using them would not clear the ATC finding.",
                           "successors": rows}, indent=2, ensure_ascii=False))
         return
 
