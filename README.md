@@ -32,6 +32,8 @@ Tested on S/4HANA 2025 FPS01 (`S4CORE 109 SP1`). On S/4HANA 2022 the successor l
 Two ways, same code:
 
 - **abapGit:** pull this repository into a local or Z package. It creates the report `ZCLEAN_CORE_SUCCESSORS` and the class `ZCL_CLEAN_CORE_SUCCESSORS`.
+
+  If the online pull stops with an SSL error such as `SSSLERR_PEER_CERT_UNTRUSTED`, your system does not trust GitHub's certificate yet. Either have it added in `STRUST`, or download the repository as a ZIP (**Code > Download ZIP**), create an offline repository in abapGit with **Prefix** folder logic, and use **Import zip**.
 - **Copy and paste:** create an executable report in SE38, for example `ZCLEAN_CORE_SUCCESSORS`, paste [standalone/zclean_core_successors.abap](standalone/zclean_core_successors.abap) over its source and activate. Everything is in that one source as local classes, selection texts included.
 
 No other dependency is needed.
