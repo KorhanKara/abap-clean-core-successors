@@ -10,6 +10,31 @@ SAP's [Cloudification Repository](https://github.com/SAP/abap-atc-cr-cv-s4hc) te
 | `MARA` | `MTART` | `I_PRODUCT` | `ProductType` |
 | `VBAK` | `AUART` | `I_SALESDOCUMENT` | `SalesDocumentType` |
 
+## Which released CDS view replaces a classic table?
+
+Read from an S/4HANA 2025 FPS01 system. The number is how many table fields the view reads directly.
+
+| Table | Released CDS view | Fields mapped |
+|---|---|---|
+| `MARA` | `I_PRODUCT` | 144 |
+| `MARC` | `I_PRODUCTSUPPLYPLANNING`, `I_PRODUCTPLANTBASIC` | 68, 65 |
+| `MARD` | `I_PRODUCTSTORAGELOCATIONBASIC` | 20 |
+| `VBAK` | `I_SALESDOCUMENT` | 137 |
+| `VBAP` | `I_SALESDOCUMENTITEM` | 224 |
+| `LIKP` | `I_DELIVERYDOCUMENT` | 153 |
+| `VBRK` | `I_BILLINGDOCUMENTBASIC` | 109 |
+| `EKKO` | `I_PURCHASEORDERAPI01` | 62 |
+| `EKPO` | `I_PURCHASEORDERITEMAPI01` | 140 |
+| `KNA1` | `I_CUSTOMER` | 98 |
+| `LFA1` | `I_SUPPLIER` | 117 |
+| `BUT000` | `I_BUSINESSPARTNER` | 89 |
+| `BKPF` | `I_JOURNALENTRY` | 90 |
+| `BSEG` | `I_OPERATIONALACCTGDOCITEM` | 285 |
+| `T001` | `I_COMPANYCODE` | 22 |
+| `AUFK` | `I_ORDER` | 18 |
+
+Run the report or the skill for the field-by-field mapping of any of the 294 pairs.
+
 ## Why read it from the system
 
 A shared mapping file is correct for one release. The report reads the system it runs on, so the result matches the views you actually have, including their field names and any fields your release does not have yet.
@@ -144,6 +169,20 @@ On releases before S/4HANA 2022 the report does not run, so the skill's bundled 
 - Function modules are listed by their own name; SAP stores them under the function group.
 - The report reads your own system, so fields added to a view by your extensions or add-ons are listed too.
 - Reading `DD27S` needs classic ABAP. The report does not run in ABAP Cloud, on BTP or in a public cloud tenant.
+
+## FAQ
+
+### Does a successor released for key user apps clear the ATC finding?
+
+No. The ATC check "Usage of APIs" only accepts objects released for ABAP Cloud development (contract C1). A successor released for key user apps only still gives "Usage of internal API". The report hides such successors; the AI skill names them with a warning.
+
+### Why is my table field missing from the released view?
+
+The view can read the field inside an expression (`CASE`, `CAST`, a calculation), take it through an association, or not expose it at all. The report marks expression fields as **In expression** and shows the definition.
+
+### Does it work on S/4HANA 2020 or older?
+
+The report needs S/4HANA 2022 or later, where SAP fills the successor list in the system. On older releases use the AI skill with its bundled S/4HANA 2025 data.
 
 ## Development
 
